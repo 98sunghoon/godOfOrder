@@ -1,0 +1,288 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>주문의 신_주문을 편리하게</title>
+    <meta name="Manager" content="Management">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <style type="text/css">
+        body {
+            max-width: 100%;
+            height: 100%;
+            background-color: #F8F4EE;
+            font-family: 'Gothic A1', sans-serif;
+            font-weight:500;
+        }
+
+        #top {
+            height: 70px;
+            text-align: center;
+        }
+
+        #left {
+            width: 59.8%;
+            float: left;
+            border: 1px black solid;
+        }
+
+        #left_top {
+            padding: 4px;
+            height: 20%;
+            margin: 2px;
+            border: 1px black solid;
+        }
+
+        #left_bottom {
+            padding: 4px;
+            margin: 2px;
+            border: 1px black solid;
+        }
+
+        #right {
+            padding: 4px;
+            width: 40%;
+            height: 78%;
+            float: right;
+            border: 1px black solid;
+        }
+
+        #right_bottom {
+            width: 40%;
+            float: right;
+            margin-top: 3px;
+        }
+
+        .FirstLine {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 3px
+        }
+
+        #col-1 {
+            width: 40px;
+        }
+
+        #col-2 {
+            width: 80%;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Gothic+A1:400,500,600&amp;subset=korean" rel="stylesheet">
+</head>
+
+<body>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    function previewImage(targetObj, View_area) {
+        var preview = document.getElementById(View_area); //div id
+        var ua = window.navigator.userAgent;
+        //ie일때(IE8 이하에서만 작동)
+        if (ua.indexOf("MSIE") > -1) {
+            targetObj.select();
+            try {
+                var src = document.selection.createRange().text; // get file full path(IE9, IE10에서 사용 불가)
+                var ie_preview_error = document.getElementById("ie_preview_error_" + View_area);
+                if (ie_preview_error) {
+                    preview.removeChild(ie_preview_error); //error가 있으면 delete
+                }
+                var img = document.getElementById(View_area); //이미지가 뿌려질 곳
+                //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
+                img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')";
+            }
+            catch (e) {
+                if (!document.getElementById("ie_preview_error_" + View_area)) {
+                    var info = document.createElement("<p>");
+                    info.id = "ie_preview_error_" + View_area;
+                    info.innerHTML = e.name;
+                    preview.insertBefore(info, null);
+                }
+            }
+            //ie가 아닐때(크롬, 사파리, FF)
+        }
+        else {
+            var files = targetObj.files;
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
+                if (!file.type.match(imageType)) continue;
+                var prevImg = document.getElementById("prev_" + View_area); //이전에 미리보기가 있다면 삭제
+                if (prevImg) {
+                    preview.removeChild(prevImg);
+                }
+                var img = document.createElement("img");
+                img.id = "prev_" + View_area;
+                img.classList.add("obj");
+                img.file = file;
+                img.style.width = '200px';
+                img.style.height = '200px';
+                preview.appendChild(img);
+                if (window.FileReader) { // FireFox, Chrome, Opera 확인.
+                    var reader = new FileReader();
+                    reader.onloadend = (function (aImg) {
+                        return function (e) {
+                            aImg.src = e.target.result;
+                        };
+                    })(img);
+                    reader.readAsDataURL(file);
+                }
+                else { // safari is not supported FileReader
+                    //alert('not supported FileReader');
+                    if (!document.getElementById("sfr_preview_error_" + View_area)) {
+                        var info = document.createElement("p");
+                        info.id = "sfr_preview_error_" + View_area;
+                        info.innerHTML = "not supported FileReader";
+                        preview.insertBefore(info, null);
+                    }
+                }
+            }
+        }
+    }
+</script>
+<!--맨 윗 줄-->
+<div id="top">
+    <div> <img id="logo" src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height:90%; max-width: 50%">
+        <button type="button" name="logout" class="btn btn-outline-dark" style="float: right; max-height: 100%; max-width: 50%" > 로그아웃</button>
+    </div>
+</div>
+
+
+
+
+
+<!--왼쪽-->
+<div id="left">
+    <!--왼쪽 위-->
+    <div id="left_top">
+        <!--첫째줄-->
+        <div class="FirstLine" style="height:20%; "> 점포 정보
+            <hr style="margin: 0" color="lightgray"> </div>
+        <!--점포정보-->
+    </div>
+    <!--왼쪽 아래-->
+    <div id="left_bottom">
+        <!--첫째줄-->
+        <div class="FirstLine"> 메뉴관리
+            <hr style="margin: 0" color="lightgray"> </div>
+        <!--둘째줄-->
+        <div style="width:100%; height:60%; overflow:auto">
+            <table class="table table-bordered table-hover">
+                <colgroup>
+                    <col id="col-1">
+                    <col id="col-1">
+                    <col id="col-2">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">소진</th>
+                    <th scope="col">메뉴</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <input type="checkbox"> </td>
+                    <td>라면</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>
+                        <input type="checkbox"> </td>
+                    <td>닭강정</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>
+                        <input type="checkbox"> </td>
+                    <td>스테이크</td>
+                </tr>
+                <tr>
+                    <th scope="row">4</th>
+                    <td>
+                        <input type="checkbox"> </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">5</th>
+                    <td>
+                        <input type="checkbox"> </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">6</th>
+                    <td>
+                        <input type="checkbox"> </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">7</th>
+                    <td>
+                        <input type="checkbox"> </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">8</th>
+                    <td>
+                        <input type="checkbox"> </td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--오른쪽-->
+<div id="right" style="overflow:auto">
+    <!-- 첫째줄 -->
+    <div class="FirstLine"> 메뉴정보
+        <hr style="margin: 0" color="lightgray"> </div>
+    <!--둘째줄-->
+    <div class="FirstLine" style="text-align:left; margin-top: 3px;"> 메뉴사진
+        <div id='View_area' name="preview" style='position:relative; width: 200px; height: 200px; color: black; border:1px solid #ddd; dispaly:block; margin-bottom: 3px'></div>
+        <div style="text-align: left">
+            <input type="file" name="profile_pt" id="profile_pt" onchange="previewImage(this,'View_area')"> </div>
+    </div>
+    <!--셋째줄-->
+    <div class="form-group" style="margin:2%;">
+        <figure class="figure" style="margin-bottom: 1; width: 100%; ">
+            <div class="form-group" style="margin-bottom: 1">
+                <label style="margin-bottom: 1px;">메뉴 이름</label>
+                <input type="text" name="MenuName" class="form-control" style="height: 35px"> </div>
+            <div class="form-group" style="margin-bottom: 2px;">
+                <label style="margin-bottom: 1">세부사항</label>
+                <input type="text" name="Info" class="form-control" style="height: 35px"> </div>
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label style="margin-bottom: 1">가격</label>
+                <input type="text" name="Price" class="form-control" style="height: 35px;"> </div>
+        </figure>
+        <div style="text-align: center;">
+            <button type="button" name="MenuClear" class="btn btn-secondary  " style="width: 90%; height:40;"> 메뉴생성 / 수정</button>
+        </div>
+    </div>
+</div>
+<div id="right_bottom">
+    <button type="button" class="btn btn-primary" name="StoreClear" style="width: 100%; height: 50px;">점포생성/수정</button>
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAWhKVEGr3o6rM4QQLTxgvArv_LCanc1EU",
+        authDomain: "godoforder-74975.firebaseapp.com",
+        databaseURL: "https://godoforder-74975.firebaseio.com",
+        projectId: "godoforder-74975",
+        storageBucket: "godoforder-74975.appspot.com",
+        messagingSenderId: "583480301154"
+    };
+    firebase.initializeApp(config);
+</script>
+<script src="/js/admin/manage.js"> </script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
+</script>
+</body>
+
+</html>

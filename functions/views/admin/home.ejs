@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>주문의 신_주문을 편리하게</title>
+    <meta name="Manager" content="manager 2">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        body{
+            background-color: #F8F4EE;
+        }
+
+        div{
+            text-align: center;
+            padding: 70px;
+
+        }
+
+        img{
+            /*height: 200px;*/
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+<div>
+    <img src="/images/Logo.jpg" alt="로고" title="주문의 신">
+</div>
+
+
+<div >
+
+    <button type="button" name="SalesBegin" class="btn btn-dark btn-lg" style="width: 200px;" onclick=kk()>영업시작</button>
+
+
+    <button type="button" name="Management" class="btn btn-dark btn-lg" style="width:200px;">가게 관리</button>
+</div>
+
+<!--<script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-app.js"></script>-->
+<script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+<!--<script src="https://www.gstatic.com/firebasejs/5.5.8/firebase-firestore.js"></script>-->
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAWhKVEGr3o6rM4QQLTxgvArv_LCanc1EU",
+        authDomain: "godoforder-74975.firebaseapp.com",
+        databaseURL: "https://godoforder-74975.firebaseio.com",
+        projectId: "godoforder-74975",
+        storageBucket: "godoforder-74975.appspot.com",
+        messagingSenderId: "583480301154"
+    };
+    firebase.initializeApp(config);
+</script>
+
+<script src="/js/admin/home.js"> </script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"> </script>
+<!--<script type="text/javascript" src="/js/bootstrap.js"></script>-->
+</body>
+
+</html>
