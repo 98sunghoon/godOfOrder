@@ -160,19 +160,19 @@
         </div>
         <div style="max-height: 78%">
             <label style="width:10%; margin-bottom: 1px; float:left; margin-left:5px; margin-top:16px">점포 이름</label>
-            <input type="text" name="MenuName" class="form-control"
+            <input type="text" name="input_name" class="form-control"
                    style="height: 30px; width: 35%; margin:5px; margin-top:15px; padding:5px; float:left">
 
             <label style="width:10%; margin-bottom: 1px; float:left; margin-left:5px;  margin-top:16px">테이블 수</label>
-            <input type="number" name="MenuName" class="form-control" min=0 value=0
+            <input type="number" name="input_table" class="form-control" min=0 value=0
                    style="height: 30px; width: 36%; margin:5px; margin-top:16px;padding:0; float:left; text-align: center">
 
             <label style="width:10%; margin-bottom: 1px; float:left; margin-left:5px; margin-top:15px">포장 가능</label>
-            <input type="checkbox" name="MenuName" class="form-control"
+            <input type="checkbox" name="input_takeout" class="form-control"
                    style="height: 20px; max-width: 35%; margin:5px; margin-top:15px;padding:0; float:left">
 
             <label style="width:10%; margin-bottom: 1px; float:left; margin-left:5px; margin-top:15px">서빙 여부</label>
-            <input type="checkbox" name="MenuName" class="form-control"
+            <input type="checkbox" name="input_serving" class="form-control"
                    style="height: 20px; max-width: 35%; margin:5px; margin-top:15px;padding:0; float:left">
 
         </div>
@@ -186,13 +186,13 @@
         </div>
         <!--둘째줄-->
         <div style="width:100%; height:60%; overflow:auto">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover" id="menuTable">
                 <thead>
                 <tr>
                     <th style="width:30%">이름</th>
                     <th style="width:20%">가격</th>
                     <th style="width:65px">매진</th>
-                    <th >세부사항</th>
+                    <th>세부사항</th>
                     <th style="width:65px">삭제</th>
                 </tr>
                 </thead>
@@ -219,17 +219,17 @@
         <figure class="figure" style="margin-bottom: 1px; width: 100%; ">
             <div class="form-group" style="margin-bottom: 1px">
                 <label style="margin-bottom: 1px;">메뉴 이름</label>
-                <input type="text" name="MenuName" class="form-control" style="height: 35px"></div>
+                <input type="text" name="input_menu_name" class="form-control" style="height: 35px"></div>
             <div class="form-group" style="margin-bottom: 2px;">
                 <label style="margin-bottom: 1px">세부사항</label>
-                <input type="text" name="Info" class="form-control" style="height: 35px"></div>
+                <input type="text" name="input_menu_description" class="form-control" style="height: 35px"></div>
             <div class="form-group" style="margin-bottom: 10px;">
                 <label style="margin-bottom: 1px">가격</label>
-                <input type="text" name="Price" class="form-control" style="height: 35px;"></div>
+                <input type="text" name="input_menu_price" class="form-control" style="height: 35px;"></div>
         </figure>
         <div style="text-align: center;">
-            <input type="button" name="MenuClear" value="메뉴생성 / 수정" class="btn btn-secondary  "
-                    style="width: 90%; height:40px;">
+            <input type="button" name="MenuClear" value="메뉴생성 / 수정" onclick=addMenu() class="btn btn-secondary"
+                   style="width: 90%; height:40px;"/>
         </div>
     </div>
 </div>
