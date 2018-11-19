@@ -20,6 +20,7 @@ function init() {
             restaurantList();
         } else {
             // No user is signed in.
+            location.href='loginForm'
         }
     });
 
@@ -108,16 +109,21 @@ function restaurantList() {
 function restaurantManage(restId) {
     //null이면 새로생성
     //id있으면 수정
-    // var queryString = '/manage?id='+restId
-    // location.href=queryString;
-    location.href='manage';
+    var queryString = 'manage?id='+restId;
+    location.href=queryString;
+    // location.href='manage';
+    // document.id.action="manage"
+    // document.id.submit();
+
 }
 
 function restaurantDelete(restId) {
 
 }
 
-function restaurantOperate(restId){}
+function restaurantOperate(restId){
+
+}
 
 function signOut(){
     firebase.auth().signOut().then(function() {

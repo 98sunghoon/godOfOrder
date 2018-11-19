@@ -25,18 +25,15 @@ router.get('/loginForm',function (req,res,next) {
     res.render('admin/loginForm');
 });
 
-router.get('/loginChk',function (req,res,next){
-    //여기서 admin sdk로 확인
-
-})
-
 router.get('/home', function(req, res, next) {
     res.render('admin/home')
 });
 
-router.get('/manage', function (req,res,next) {
+router.get('/manage?:id', function (req,res,next) {
     // var id = req.query.id;
-    res.render('admin/manage');//{id:id}
+    res.render('admin/manage');//{
+    // res.render('admin/manage');
+    // res.send(id);
 });
 
 router.get('/operate', function (req,res,next) {

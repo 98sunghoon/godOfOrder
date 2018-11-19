@@ -1,4 +1,3 @@
-
 var name, email, photoUrl, uid, emailVerified;
 var db = firebase.firestore();
 
@@ -12,17 +11,35 @@ function init(){
             emailVerified = user.emailVerified;
             uid = user.uid;
 
+
+            // console.log(id);
         } else {
             // No user is signed in.
             location.href='loginForm'
         }
     });
 
+    var abc = getParameterByName('id');
+    console.log(abc);
 }
+
+
+function menuList(){
+
+}
+
 
 window.onload = function() {
     init();
 };
+
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 
 function signOut(){
