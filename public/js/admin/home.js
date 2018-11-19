@@ -108,7 +108,9 @@ function restaurantList() {
 function restaurantManage(restId) {
     //null이면 새로생성
     //id있으면 수정
-    console.log(restId)
+    // var queryString = '/manage?id='+restId
+    // location.href=queryString;
+    location.href='manage';
 }
 
 function restaurantDelete(restId) {
@@ -117,6 +119,10 @@ function restaurantDelete(restId) {
 
 function restaurantOperate(restId){}
 
-function logout() {
-
+function signOut(){
+    firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+    }).catch(function(error) {
+        // An error happened.
+    });
 }

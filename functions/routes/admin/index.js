@@ -30,13 +30,13 @@ router.get('/loginChk',function (req,res,next){
 
 })
 
-router.get('/home', function(req, res) {
+router.get('/home', function(req, res, next) {
     res.render('admin/home')
 });
 
 router.get('/manage', function (req,res,next) {
-
-    res.render('admin/manage');
+    // var id = req.query.id;
+    res.render('admin/manage');//{id:id}
 });
 
 router.get('/operate', function (req,res,next) {

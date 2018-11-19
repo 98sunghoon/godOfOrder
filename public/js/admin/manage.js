@@ -3,6 +3,7 @@ var name, email, photoUrl, uid, emailVerified;
 var db = firebase.firestore();
 
 function init(){
+    //authorize
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             name = user.displayName;
@@ -10,11 +11,10 @@ function init(){
             photoUrl = user.photoURL;
             emailVerified = user.emailVerified;
             uid = user.uid;
-            // console.log("user info : ",user);
-            restaurantList();
+
         } else {
             // No user is signed in.
-            console.log("hi");
+            location.href='loginForm'
         }
     });
 
@@ -23,3 +23,12 @@ function init(){
 window.onload = function() {
     init();
 };
+
+
+function signOut(){
+    firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+    }).catch(function(error) {
+        // An error happened.
+    });
+}

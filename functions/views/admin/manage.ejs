@@ -5,15 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>주문의 신_주문을 편리하게</title>
     <meta name="Manager" content="Management">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <style type="text/css">
         body {
             max-width: 100%;
             height: 100%;
             background-color: #F8F4EE;
             font-family: 'Gothic A1', sans-serif;
-            font-weight:500;
+            font-weight: 500;
         }
 
         #top {
@@ -141,14 +142,12 @@
 </script>
 <!--맨 윗 줄-->
 <div id="top">
-    <div> <img id="logo" src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height:90%; max-width: 50%">
-        <button type="button" name="logout" class="btn btn-outline-dark" style="float: right; max-height: 100%; max-width: 50%" > 로그아웃</button>
+    <div><img id="logo" src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height:90%; max-width: 50%">
+        <button type="button" name="logout" class="btn btn-outline-dark" onclick=signOut() style="float: right; max-height: 100%; max-width: 50%">
+            로그아웃
+        </button>
     </div>
 </div>
-
-
-
-
 
 <!--왼쪽-->
 <div id="left">
@@ -156,14 +155,16 @@
     <div id="left_top">
         <!--첫째줄-->
         <div class="FirstLine" style="height:20%; "> 점포 정보
-            <hr style="margin: 0" color="lightgray"> </div>
+            <hr style="margin: 0" color="lightgray">
+        </div>
         <!--점포정보-->
     </div>
     <!--왼쪽 아래-->
     <div id="left_bottom">
         <!--첫째줄-->
         <div class="FirstLine"> 메뉴관리
-            <hr style="margin: 0" color="lightgray"> </div>
+            <hr style="margin: 0" color="lightgray">
+        </div>
         <!--둘째줄-->
         <div style="width:100%; height:60%; overflow:auto">
             <table class="table table-bordered table-hover">
@@ -183,49 +184,49 @@
                 <tr>
                     <th scope="row">1</th>
                     <td>
-                        <input type="checkbox"> </td>
+                        <input type="checkbox"></td>
                     <td>라면</td>
                 </tr>
                 <tr>
                     <th scope="row">2</th>
                     <td>
-                        <input type="checkbox"> </td>
+                        <input type="checkbox"></td>
                     <td>닭강정</td>
                 </tr>
                 <tr>
                     <th scope="row">3</th>
                     <td>
-                        <input type="checkbox"> </td>
+                        <input type="checkbox"></td>
                     <td>스테이크</td>
                 </tr>
                 <tr>
                     <th scope="row">4</th>
                     <td>
-                        <input type="checkbox"> </td>
+                        <input type="checkbox"></td>
                     <td></td>
                 </tr>
                 <tr>
                     <th scope="row">5</th>
                     <td>
-                        <input type="checkbox"> </td>
+                        <input type="checkbox"></td>
                     <td></td>
                 </tr>
                 <tr>
                     <th scope="row">6</th>
                     <td>
-                        <input type="checkbox"> </td>
+                        <input type="checkbox"></td>
                     <td></td>
                 </tr>
                 <tr>
                     <th scope="row">7</th>
                     <td>
-                        <input type="checkbox"> </td>
+                        <input type="checkbox"></td>
                     <td></td>
                 </tr>
                 <tr>
                     <th scope="row">8</th>
                     <td>
-                        <input type="checkbox"> </td>
+                        <input type="checkbox"></td>
                     <td></td>
                 </tr>
                 </tbody>
@@ -237,28 +238,32 @@
 <div id="right" style="overflow:auto">
     <!-- 첫째줄 -->
     <div class="FirstLine"> 메뉴정보
-        <hr style="margin: 0" color="lightgray"> </div>
+        <hr style="margin: 0" color="lightgray">
+    </div>
     <!--둘째줄-->
     <div class="FirstLine" style="text-align:left; margin-top: 3px;"> 메뉴사진
-        <div id='View_area' name="preview" style='position:relative; width: 200px; height: 200px; color: black; border:1px solid #ddd; dispaly:block; margin-bottom: 3px'></div>
+        <div id='View_area' name="preview"
+             style='position:relative; width: 200px; height: 200px; color: black; border:1px solid #ddd; dispaly:block; margin-bottom: 3px'></div>
         <div style="text-align: left">
-            <input type="file" name="profile_pt" id="profile_pt" onchange="previewImage(this,'View_area')"> </div>
+            <input type="file" name="profile_pt" id="profile_pt" onchange="previewImage(this,'View_area')"></div>
     </div>
     <!--셋째줄-->
     <div class="form-group" style="margin:2%;">
         <figure class="figure" style="margin-bottom: 1; width: 100%; ">
             <div class="form-group" style="margin-bottom: 1">
                 <label style="margin-bottom: 1px;">메뉴 이름</label>
-                <input type="text" name="MenuName" class="form-control" style="height: 35px"> </div>
+                <input type="text" name="MenuName" class="form-control" style="height: 35px"></div>
             <div class="form-group" style="margin-bottom: 2px;">
                 <label style="margin-bottom: 1">세부사항</label>
-                <input type="text" name="Info" class="form-control" style="height: 35px"> </div>
+                <input type="text" name="Info" class="form-control" style="height: 35px"></div>
             <div class="form-group" style="margin-bottom: 10px;">
                 <label style="margin-bottom: 1">가격</label>
-                <input type="text" name="Price" class="form-control" style="height: 35px;"> </div>
+                <input type="text" name="Price" class="form-control" style="height: 35px;"></div>
         </figure>
         <div style="text-align: center;">
-            <button type="button" name="MenuClear" class="btn btn-secondary  " style="width: 90%; height:40;"> 메뉴생성 / 수정</button>
+            <button type="button" name="MenuClear" class="btn btn-secondary  " style="width: 90%; height:40;"> 메뉴생성 /
+                수정
+            </button>
         </div>
     </div>
 </div>
@@ -280,7 +285,7 @@
     };
     firebase.initializeApp(config);
 </script>
-<script src="/js/admin/manage.js"> </script>
+<script src="/js/admin/manage.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
 </script>
 </body>
