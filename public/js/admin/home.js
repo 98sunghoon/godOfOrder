@@ -1,9 +1,9 @@
-
 var name, email, photoUrl, uid, emailVerified;
-var db = firebase.firestore();;
+var db = firebase.firestore();
+var tableData = [];
 
-function init(){
-    firebase.auth().onAuthStateChanged(function(user) {
+function init() {
+    firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             name = user.displayName;
             email = user.email;
@@ -26,7 +26,7 @@ function init(){
 }
 
 
-window.onload = function() {
+window.onload = function () {
     init();
 };
 
@@ -40,41 +40,83 @@ function kk() {
 }
 
 
-
-function restaurantList(){
+function restaurantList() {
     //firestore에서 해당 uid로 가져온 뒤 테이블 그리기
 
     var rests = db.collection("managers").doc(uid).collection("rests");
 
     // console.log("haha",rests.data());
-    rests.get().then(function(querySnapshot){
-        querySnapshot.forEach(function(ref){
-            console.log(ref.id ,",",ref.data());
-            ref.data().restaurant.get().then(function(doc){
-                if(doc.exists){
-                    console.log("doc data : ", doc.data().name);
-                }else{
-                    console.log("nononon");
+    rests.get().then(function (querySnapshot) {
+        // var tbody = document.createElement("tbody");
+        querySnapshot.forEach(function (ref) {
+            ref.data().restaurant.get().then(function (doc) {
+                if (doc.exists) {
+                    let object = {
+                        name: doc.data().name,
+                        table: doc.data().table,
+                        takeout: doc.data().takeout ? "o" : "x",
+                        serving: doc.data().serving ? "o" : "x"
+                    }
+                    tableData.push(object);//데이터 저장해놓기
+                    var tr = document.createElement("tr");
+                    for (index in object){
+                        var td = document.createElement("td");
+                        td.innerHTML = object[index];
+                        tr.appendChild(td);
+                    }
+
+                    let tdEdit = document.createElement("td");
+                    let EditButton = document.createElement("button");
+                    EditButton.setAttribute("id", "editBtn");
+                    EditButton.addEventListener('click', function(event){restaurantManage(doc.id)});
+                    EditButton.innerHTML="수정";
+                    tdEdit.appendChild(EditButton);
+                    tr.appendChild(tdEdit);
+
+                    let tdOper = document.createElement("td");
+                    let OperateButton = document.createElement("button");
+                    OperateButton.setAttribute("id", "mngBtn");
+                    OperateButton.addEventListener('click', function(event){restaurantOperate(doc.id)});
+                    OperateButton.innerHTML="운영하기";
+                    tdOper.appendChild(OperateButton);
+                    tr.appendChild(tdOper);
+
+                    let tdDel = document.createElement("td");
+                    let DeleteButton = document.createElement("button");
+                    DeleteButton.setAttribute("id", "delBtn");
+                    DeleteButton.addEventListener('click', function(event){restaurantDelete(doc.id)});
+                    DeleteButton.innerHTML="삭제";
+                    tdDel.appendChild(DeleteButton);
+                    tr.appendChild(tdDel);
+
+                    tableBody.append(tr);
+                }else {
+                    console.log("nonono");
                 }
-            })
+            });
         });
+        //모든 행(점포 정보)를 가져오고 테이블을 만듬
+
+
     })
-    .catch(function(error){
-        console.log("error : ",error);
-    })
+        .catch(function (error) {
+            console.log("error : ", error);
+        })
 }
 
 
-
-
-function restaurantManage(){
-
-}
-function restaurantDelete(){
-
+function restaurantManage(restId) {
+    //null이면 새로생성
+    //id있으면 수정
+    console.log(restId)
 }
 
+function restaurantDelete(restId) {
 
-function logout(){
+}
+
+function restaurantOperate(restId){}
+
+function logout() {
 
 }

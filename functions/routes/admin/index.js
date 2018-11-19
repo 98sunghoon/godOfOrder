@@ -18,7 +18,7 @@ var db = admin.firestore();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.redirect('admin/loginForm');
+    res.redirect('loginForm');
 });
 
 router.get('/loginForm',function (req,res,next) {
@@ -34,8 +34,8 @@ router.get('/home', function(req, res) {
     res.render('admin/home')
 });
 
-
 router.get('/manage', function (req,res,next) {
+
     res.render('admin/manage');
 });
 
