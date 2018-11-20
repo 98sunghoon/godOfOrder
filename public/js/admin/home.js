@@ -1,22 +1,10 @@
-var name, email, photoUrl, uid, emailVerified;
 var db = firebase.firestore();
 var tableData = [];
-
+var uid;
 function init() {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-            name = user.displayName;
-            email = user.email;
-            photoUrl = user.photoURL;
-            emailVerified = user.emailVerified;
             uid = user.uid;
-            // User is signed in.
-            // firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
-            //     // Send token to your backend via HTTPS
-            //     // ...
-            // }).catch(function(error) {
-            //     // Handle error
-            // });
             restaurantList();
         } else {
             // No user is signed in.
@@ -104,14 +92,27 @@ function restaurantList() {
 }
 
 
+
 function restaurantManage(restId) {
     //null이면 새로생성
     //id있으면 수정
-    var queryString = 'manage?id='+restId;
-    location.href=queryString;
-    // location.href='manage';
-    // document.id.action="manage"
-    // document.id.submit();
+    if(restId!=null) {
+        var queryString = 'manage?id=' + restId;
+        location.href = queryString;
+    }else{
+        var newRest = db.collection("restaurants").doc();
+        newRest.set({
+            manager: uid
+        }).then(function() {
+            console.log(newRest);
+            var queryString = 'manage?id=' + newRest.id;
+            db.collection("managers").doc(uid).collection("rests").add({
+                restaurant: newRest
+            }).then(function () {
+                location.href = queryString
+            });
+        });
+    }
 
 }
 

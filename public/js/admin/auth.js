@@ -1,27 +1,25 @@
-// var firebase = require('firebase');
-
-// // Initialize Firebase
-// var config = {
-//     apiKey: "AIzaSyAWhKVEGr3o6rM4QQLTxgvArv_LCanc1EU",
-//     authDomain: "godoforder-74975.firebaseapp.com",
-//     databaseURL: "https://godoforder-74975.firebaseio.com",
-//     projectId: "godoforder-74975",
-//     storageBucket: "godoforder-74975.appspot.com",
-//     messagingSenderId: "583480301154"
-// };
-// firebase.initializeApp(config);
 var auth;
+var name, email, photoUrl, uid, emailVerified;
+var db = firebase.firestore();
 
 function login() {
 
     auth = firebase.auth();
     var authProvider = new firebase.auth.GoogleAuthProvider();
-    auth.onAuthStateChanged(function(user) {
+    auth.onAuthStateChanged(function (user) {
         // Authentication Success
         if (user) {
-            console.log("Success");
-            console.log(user);
-            location.href='home';
+            name = user.displayName;
+            email = user.email;
+            photoUrl = user.photoURL;
+            emailVerified = user.emailVerified;
+            uid = user.uid;
+            db.collection("managers").doc(uid).set({
+                name: name
+            }).then(function () {
+                location.href = 'home';
+            })
+
         }
         // Authentication Fail
         else {
