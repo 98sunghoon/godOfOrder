@@ -46,9 +46,7 @@ function restaurantList() {
 
     var rests = db.collection("managers").doc(uid).collection("rests");
 
-    // console.log("haha",rests.data());
     rests.get().then(function (querySnapshot) {
-        // var tbody = document.createElement("tbody");
         querySnapshot.forEach(function (ref) {
             ref.data().restaurant.get().then(function (doc) {
                 if (doc.exists) {

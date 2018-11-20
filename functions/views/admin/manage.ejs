@@ -220,16 +220,23 @@
             <div class="form-group" style="margin-bottom: 1px">
                 <label style="margin-bottom: 1px;">메뉴 이름</label>
                 <input type="text" name="input_menu_name" class="form-control" style="height: 35px"></div>
+
             <div class="form-group" style="margin-bottom: 2px;">
                 <label style="margin-bottom: 1px">세부사항</label>
                 <input type="text" name="input_menu_description" class="form-control" style="height: 35px"></div>
+
             <div class="form-group" style="margin-bottom: 10px;">
                 <label style="margin-bottom: 1px">가격</label>
-                <input type="text" name="input_menu_price" class="form-control" style="height: 35px;"></div>
+                <div class="input-group">
+                    <input type="number" name="input_menu_price" min=0 step=100 class="form-control"
+                           aria-label="Amount (to the nearest dollar)">
+                    <span class="input-group-addon">원</span>
+                </div>
+            </div>
         </figure>
         <div style="text-align: center;">
-            <input type="button" name="MenuClear" value="메뉴생성 / 수정" onclick=addMenu() class="btn btn-secondary"
-                   style="width: 90%; height:40px;"/>
+            <input type="button" name="MenuClear" value="메뉴생성 / 수정" onclick=menuSave() class="btn btn-secondary"
+                   style="width: 90%; height:40px;">
         </div>
     </div>
 </div>
