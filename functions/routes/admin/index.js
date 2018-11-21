@@ -18,7 +18,8 @@ var db = admin.firestore();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.redirect('loginForm');
+    // res.redirect('/loginForm');
+    res.send("hi");
 });
 
 router.get('/loginForm',function (req,res,next) {
@@ -36,8 +37,12 @@ router.get('/manage?:id', function (req,res,next) {
     // res.send(id);
 });
 
-router.get('/operate', function (req,res,next) {
-    res.send('operate page')
+router.get('/qr?:id', function (req,res,next) {
+    res.render('admin/qrScreen');
+})
+
+router.get('/operate?:id', function (req,res,next) {
+    res.render('admin/operate');
 })
 
 module.exports = router;

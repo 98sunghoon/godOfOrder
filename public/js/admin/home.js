@@ -46,6 +46,7 @@ function restaurantList() {
                     }
                     tableData.push(object);//데이터 저장해놓기
                     var tr = document.createElement("tr");
+                    tr.setAttribute("id",doc.id);
                     for (index in object){
                         var td = document.createElement("td");
                         td.innerHTML = object[index];
@@ -55,14 +56,25 @@ function restaurantList() {
                     let tdEdit = document.createElement("td");
                     let EditButton = document.createElement("button");
                     EditButton.setAttribute("id", "editBtn");
+                    EditButton.setAttribute("class","btn btn-outline-dark");
                     EditButton.addEventListener('click', function(event){restaurantManage(doc.id)});
                     EditButton.innerHTML="수정";
                     tdEdit.appendChild(EditButton);
                     tr.appendChild(tdEdit);
 
+                    let tdQrcode = document.createElement("td");
+                    let QRButton = document.createElement("button");
+                    QRButton.setAttribute("id", "qrBtn");
+                    QRButton.setAttribute("class","btn btn-outline-dark");
+                    QRButton.addEventListener('click', function(){window.open('/qr?id='+doc.id)});
+                    QRButton.innerHTML="조회";
+                    tdQrcode.appendChild(QRButton);
+                    tr.appendChild(tdQrcode);
+
                     let tdOper = document.createElement("td");
                     let OperateButton = document.createElement("button");
                     OperateButton.setAttribute("id", "mngBtn");
+                    OperateButton.setAttribute("class","btn btn-outline-dark");
                     OperateButton.addEventListener('click', function(event){restaurantOperate(doc.id)});
                     OperateButton.innerHTML="운영하기";
                     tdOper.appendChild(OperateButton);
@@ -71,6 +83,7 @@ function restaurantList() {
                     let tdDel = document.createElement("td");
                     let DeleteButton = document.createElement("button");
                     DeleteButton.setAttribute("id", "delBtn");
+                    DeleteButton.setAttribute("class","btn btn-outline-dark");
                     DeleteButton.addEventListener('click', function(event){restaurantDelete(doc.id)});
                     DeleteButton.innerHTML="삭제";
                     tdDel.appendChild(DeleteButton);
@@ -117,11 +130,24 @@ function restaurantManage(restId) {
 }
 
 function restaurantDelete(restId) {
-
+    db.collection('managers').doc(uid).collection("rests").doc(restId).delete()
+        .then(function () {
+        console.log("1 successfully deleted!");
+    }).catch(function (error) {
+        console.error("Error removing document: ", error);
+    });
+    db.collection('restaurants').doc(restId).delete()
+.then(function () {
+        console.log("2 successfully deleted!");
+    }).catch(function (error) {
+        console.error("Error removing document: ", error);
+    });
+    $("#" + restId).remove();
 }
 
 function restaurantOperate(restId){
-
+    var queryString = 'operate?id=' + restId;
+    location.href = queryString;
 }
 
 function signOut(){

@@ -42,13 +42,13 @@ function restSave() {
         return;
     }
     var table = $("input[name=input_table]").val();
-    if ($("input[name=input_serving]").prop("checked") && $("input[name=input_table]").val() == 0) {
+    if ($("input[name=input_serving]").prop("checked") && table == 0) {
         alert("테이블 수는 반드시 입력해야 합니다!");
         return;
     }
     var takeout = $("input[name=input_takeout]").prop("checked");
     var serving = $("input[name=input_serving]").prop("checked");
-    console.log(takeout);
+    console.log(table);
     console.log(serving);
 
     var manager = db.collection("managers").doc(uid);
@@ -62,24 +62,26 @@ function restSave() {
         }, {merge: true});
         // restId=restaurants.doc();
 
-
+        window.open('/qr?id=' + restId,"QRcode");
         location.href = 'home'
-    } else {//점포 새로 생성
-        var newRest = db.collection("restaurants").doc();
-        newRest.set({
-            manager: manager,
-            name: name,
-            table: table,
-            takeout: takeout,
-            serving: serving
-        });
-
-        manager.collection("rests").add({
-            restaurant: newRest
-        }).then(function () {
-            location.href = 'home'
-        });
     }
+    // } else {//점포 새로 생성
+    //     var newRest = db.collection("restaurants").doc();
+    //     newRest.set({
+    //         manager: manager,
+    //         name: name,
+    //         table: table,
+    //         takeout: takeout,
+    //         serving: serving
+    //     });
+    //
+    //     manager.collection("rests").add({
+    //         restaurant: newRest
+    //     }).then(function () {
+    //         window.open('/qr?'+newRest.id);
+    //         location.href = 'home'
+    //     });
+    // }
 
     //메뉴 soldout 입력
 }

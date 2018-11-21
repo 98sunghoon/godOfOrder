@@ -18,8 +18,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
+// app.use('/', require('./routes'));
 app.use('/', require('./routes/admin'));
+app.use('/customer', require('./routes/customer'));
 // app.use('/admin', require('./routes/admin'));
 // app.use('/', require('/admin'));
 

@@ -1,0 +1,347 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>주문의 신_주문을 편리하게</title>
+    <meta name="Manager" content="SalesBegin">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <style type="text/css">
+        body {
+            max-width: 100%;
+            height: 100%;
+            background-color: #F8F4EE;
+        }
+
+        #top {
+            height: 70px;
+            text-align: center;
+        }
+
+        #left {
+            width: 59.8%;
+            height: 88%;
+            float: left;
+            position:relative;
+        }
+
+        #right {
+            width: 40%;
+            height: 78%;
+            float: right;
+            position: relative
+        }
+
+        #right_bottom {
+            width: 40%;
+            float: right;
+            margin-top: 3px;
+        }
+
+        .FirstLine {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 3px
+        }
+
+        #col-1 {
+            width: 80px;
+            vertical-align: middle;
+        }
+
+        #col-2 {
+            width: 80%;
+            vertical-align: middle;
+        }
+
+        #col-3 {
+            width: 100px;
+            vertical-align: middle;
+        }
+
+        #title {
+            font-size: 20px;
+            font-family: "Arial Black", Gadget, sans-serif !important;
+        ;
+            background-color: #656565;
+            color: #ffffff;
+            border-color: #656565;
+            text-align: center;
+            vertical-align: middle;
+            /*height: 50px*/
+        }
+
+        .fixed {
+            height: 100px;
+            width: 100%;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    function previewImage(targetObj, View_area) {
+        var preview = document.getElementById(View_area); //div id
+        var ua = window.navigator.userAgent;
+        //ie일때(IE8 이하에서만 작동)
+        if (ua.indexOf("MSIE") > -1) {
+            targetObj.select();
+            try {
+                var src = document.selection.createRange().text; // get file full path(IE9, IE10에서 사용 불가)
+                var ie_preview_error = document.getElementById("ie_preview_error_" + View_area);
+                if (ie_preview_error) {
+                    preview.removeChild(ie_preview_error); //error가 있으면 delete
+                }
+                var img = document.getElementById(View_area); //이미지가 뿌려질 곳
+                //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
+                img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')";
+            }
+            catch (e) {
+                if (!document.getElementById("ie_preview_error_" + View_area)) {
+                    var info = document.createElement("<p>");
+                    info.id = "ie_preview_error_" + View_area;
+                    info.innerHTML = e.name;
+                    preview.insertBefore(info, null);
+                }
+            }
+            //ie가 아닐때(크롬, 사파리, FF)
+        }
+        else {
+            var files = targetObj.files;
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
+                if (!file.type.match(imageType)) continue;
+                var prevImg = document.getElementById("prev_" + View_area); //이전에 미리보기가 있다면 삭제
+                if (prevImg) {
+                    preview.removeChild(prevImg);
+                }
+                var img = document.createElement("img");
+                img.id = "prev_" + View_area;
+                img.classList.add("obj");
+                img.file = file;
+                img.style.width = '200px';
+                img.style.height = '200px';
+                preview.appendChild(img);
+                if (window.FileReader) { // FireFox, Chrome, Opera 확인.
+                    var reader = new FileReader();
+                    reader.onloadend = (function (aImg) {
+                        return function (e) {
+                            aImg.src = e.target.result;
+                        };
+                    })(img);
+                    reader.readAsDataURL(file);
+                }
+                else { // safari is not supported FileReader
+                    //alert('not supported FileReader');
+                    if (!document.getElementById("sfr_preview_error_" + View_area)) {
+                        var info = document.createElement("p");
+                        info.id = "sfr_preview_error_" + View_area;
+                        info.innerHTML = "not supported FileReader";
+                        preview.insertBefore(info, null);
+                    }
+                }
+            }
+        }
+    }
+</script>
+<!--맨 윗 줄-->
+<div id="top">
+    <div> <img id="logo" src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height:90%; max-width: 50%">
+        <button type="button" name="logout" class="btn btn-outline-dark" style="float: right; max-height: 100%; max-width: 50%"> 로그아웃</button>
+    </div>
+</div>
+<!--왼쪽-->
+<div id="left">
+    <div style="width:100%; height: 100%; overflow:auto">
+
+
+        <table class=" table table-bordered table-hover" style="margin: 0; position:absolute; top: 0;
+               left: 0;">
+            <colgroup>
+                <col id="col-3">
+                <col>
+                <col id="col-1">
+                <col id="col-3">
+            </colgroup>
+            <tr>
+                <td id="title" colspan=4>ORER</td>
+            </tr>
+            <tr>
+                <th scope="col" class="firstline">No.</th>
+                <th scope="col" class="firstline">메뉴</th>
+                <th scope="col" class="firstline">수량</th>
+                <th scope="col" class="firstline">완료</th>
+            </tr>
+        </table>
+
+        <table class=" table table-bordered table-hover" style="margin-top:110px;">
+            <colgroup>
+                <col id="col-3">
+                <col>
+                <col id="col-1">
+                <col id="col-3">
+            </colgroup>
+
+            <tbody>
+            <tr>
+                <th scope="row"></th>
+                <td>돈까스</td>
+                <td></td>
+                <td>
+                    <button type="button" name="logout" class="btn btn-outline-dark"> 완료</button>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td>치즈돈까스</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td>라면</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<!--오른쪽-->
+
+
+
+
+<div id="right" style="overflow:auto;">
+    <div style="width:100%; height: 100%; overflow:auto">
+        <table class=" table table-bordered table-hover" style="position: absolute; top: 0; left: 0; margin: 0;">
+            <colgroup>
+                <col id="col-1">
+                <col>
+                <col id="col-1">
+                <col id="col-1">
+            </colgroup>
+            <tr>
+                <td id="title" colspan=4 >TODAY </td>
+            </tr>
+            <tr>
+                <th scope="col" class="firstline">시간</th>
+                <th scope="col" class="firstline">메뉴</th>
+                <th scope="col" class="firstline">가격</th>
+                <th scope="col" class="firstline">결제</th>
+            </tr>
+        </table>
+
+        <table class=" table table-bordered table-hover" style="margin-top: 110px; " >
+            <colgroup>
+                <col id="col-1">
+                <col>
+                <col id="col-1">
+                <col id="col-1">
+            </colgroup>
+
+            <tbody>
+            <tr>
+                <th scope="row"></th>
+                <td>김치만두, 왕만두, 돈까스</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td>치즈돈까스</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td>라면 김밥</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <table class=" table table-bordered table-hover" style="position: absolute; bottom: 0; left: 0; margin: 0;">
+        <colgroup>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <tr>
+            <td  style="text-align: center; border: 1px solid black;">총매출</td>
+            <td style="text-align: right; border: 1px solid black;" >원</td>
+        </tr>
+    </table>
+
+
+
+
+
+</div>
+<div id="right_bottom">
+
+    <button type="button" class="btn btn-primary" name="StoreClear" style="width: 100%; height: 50px;">점포생성/수정</button>
+</div>
+
+<script src="/js/admin/operate.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!--<script type="text/javascript" src="js.bootstrap.js"></script>-->
+</body>
+
+</html>
