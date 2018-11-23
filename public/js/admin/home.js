@@ -1,6 +1,7 @@
 var db = firebase.firestore();
 var tableData = [];
 var uid;
+
 function init() {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -104,8 +105,6 @@ function restaurantList() {
         })
 }
 
-
-
 function restaurantManage(restId) {
     //null이면 새로생성
     //id있으면 수정
@@ -114,12 +113,13 @@ function restaurantManage(restId) {
         location.href = queryString;
     }else{
         var newRest = db.collection("restaurants").doc();
+        var manager = db.collection("managers").doc(uid);
         newRest.set({
-            manager: uid
+            manager: manager
         }).then(function() {
             console.log(newRest);
             var queryString = 'manage?id=' + newRest.id;
-            db.collection("managers").doc(uid).collection("rests").add({
+            manager.collection("rests").doc(newRest.id).set({
                 restaurant: newRest
             }).then(function () {
                 location.href = queryString
@@ -130,12 +130,14 @@ function restaurantManage(restId) {
 }
 
 function restaurantDelete(restId) {
+    let restaurant = db.collection('restaurants').doc(restId);
     db.collection('managers').doc(uid).collection("rests").doc(restId).delete()
         .then(function () {
         console.log("1 successfully deleted!");
     }).catch(function (error) {
         console.error("Error removing document: ", error);
     });
+
     db.collection('restaurants').doc(restId).delete()
 .then(function () {
         console.log("2 successfully deleted!");

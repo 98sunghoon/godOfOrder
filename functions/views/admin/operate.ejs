@@ -7,6 +7,7 @@
     <meta name="Manager" content="SalesBegin">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="manifest" href="/manifest.json">
     <style type="text/css">
         body {
             max-width: 100%;
@@ -153,7 +154,7 @@
 <!--맨 윗 줄-->
 <div id="top">
     <div> <img id="logo" src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height:90%; max-width: 50%">
-        <button type="button" name="logout" class="btn btn-outline-dark" style="float: right; max-height: 100%; max-width: 50%"> 로그아웃</button>
+        <button type="button" name="logout" onclick=signOut() class="btn btn-outline-dark" style="float: right; max-height: 100%; max-width: 50%"> 로그아웃</button>
     </div>
 </div>
 <!--왼쪽-->
@@ -338,6 +339,22 @@
 
     <button type="button" class="btn btn-primary" name="StoreClear" style="width: 100%; height: 50px;">점포생성/수정</button>
 </div>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAWhKVEGr3o6rM4QQLTxgvArv_LCanc1EU",
+        authDomain: "godoforder-74975.firebaseapp.com",
+        databaseURL: "https://godoforder-74975.firebaseio.com",
+        projectId: "godoforder-74975",
+        storageBucket: "godoforder-74975.appspot.com",
+        messagingSenderId: "583480301154"
+    };
+    firebase.initializeApp(config);
+</script>
+
 
 <script src="/js/admin/operate.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

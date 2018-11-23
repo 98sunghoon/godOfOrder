@@ -1,12 +1,342 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <title>주문의 신_주문을 편리하게</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>주문의 신_주문을 편리하게</title>
+    <meta name="Manager" content="manager 2">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Gothic+A1:400,500,600&amp;subset=korean" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 150px;
+            padding-bottom: 200px;
+            height: 100%;
+            margin: 0;
+            font-size: 50px;
+            font-family: 'Gothic A1', sans-serif;
+            font-weight: 500;
+        }
 
+        #top {
+            background-color: #F8F4EE;
+            width: 100%;
+            height: 170px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            text-align: center;
+            padding-top:10px;
+            padding-bottom: 10px;
+        }
+
+        #bottom {
+            background-color: white;
+            position: fixed;
+            width: 100%;
+            height: 150px;
+            left: 0;
+            bottom: 0;
+            text-align: right;
+        }
+
+        #panel {
+            background-color: white;
+            padding: 15px;
+            text-align: left;
+            border-top: solid 7px #c3c3c3;
+            display: none;
+            position: fixed;
+            bottom: 220px;
+            left: 0;
+            width: 100%;
+            max-height: 400px;
+        }
+
+        #flip {
+            background-color: white;
+            text-align: center;
+            position: fixed;
+            bottom: 150px;
+            left: 0;
+            width: 100%;
+            height: 70px;
+        }
+
+        #price {
+            width: 30%;
+            vertical-align: middle;
+        }
+
+        #menu {
+            float: left;
+            width: 50%;
+            text-align: center;
+            /*height: 50%;*/
+        }
+
+        #pic {
+            width: 70%;
+            max-width: 80%;
+            height: 70%;
+            max-height: 80%;
+        }
+
+        #x {
+            width: 35%;
+            height: 100%;
+            font-size: 50px;
+        }
+
+        #info {
+            font-size: 35px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            padding: 0;
+            margin: 0;
+        }
+
+        td{
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
-<h1>hi</h1>
-<button onclick=pay()></button>
+<!--누르면 올라오고 내려옴-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#flip").click(function () {
+            $("#panel").slideToggle("slow");
+        });
+    });
+</script>
+<!--맨 윗줄-->
+<div id="top"> <img src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height: 100%;"></div>
+<!--가운데 내용-->
+<div style="overflow: auto" style="padding: 15px;">
+    <!--가게이름-->
+    <div style="text-align: center; margin-top:4%; margin-bottom:4%; ">
+        <laber style=" width: 100%; font-size: 70px; margin-bottom: 0;
+          " id="restName" value=""></laber>
+        <hr style="border: 2px black solid; margin-top:0 ; width: 70%;
+           "> </div>
+    <!--이미지형 메뉴-->
+    <div id="img_menu_area">
+        <!--이미지 1300*1300-->
+        <!--<div id="menu"> <img src="/images/food1.jpg" id="pic">-->
+            <!--<div>-->
+                <!--<ul>-->
+                    <!--<li>라면</li>-->
+                    <!--<li id="info">쫄깃쫄깃</li>-->
+                    <!--<li>4000원</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div id="menu"> <img src="/images/food2.jpg" id="pic">-->
+            <!--<div>-->
+                <!--<ul>-->
+                    <!--<li>딸기</li>-->
+                    <!--<li id="info">빨개요</li>-->
+                    <!--<li>13000원</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div id="menu"> <img src="/images/food3.jpg" id="pic">-->
+            <!--<ul>-->
+                <!--<li>레몬</li>-->
+                <!--<li id="info">노래요</li>-->
+                <!--<li>13000원</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+        <!--<div id="menu"> <img src="/images/food1.jpg" id="pic">-->
+            <!--<ul>-->
+                <!--<li>제육덮밥</li>-->
+                <!--<li id="info">매운맛 선택</li>-->
+                <!--<li>7000원</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+        <!--<div id="menu"> <img src="/images/food2.jpg" id="pic">-->
+            <!--<div>-->
+                <!--<ul>-->
+                    <!--<li>딸기</li>-->
+                    <!--<li id="info">빨개요</li>-->
+                    <!--<li>13000원</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div id="menu"> <img src="/images/food3.jpg" id="pic">-->
+            <!--<div>-->
+                <!--<ul>-->
+                    <!--<li>딸기</li>-->
+                    <!--<li id="info">빨개요</li>-->
+                    <!--<li>13000원</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div id="menu"> <img src="/images/food1.jpg" id="pic">-->
+            <!--<div>-->
+                <!--<ul>-->
+                    <!--<li>딸기</li>-->
+                    <!--<li id="info">빨개요</li>-->
+                    <!--<li>13000원</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div id="menu"> <img src="/images/food2.jpg" id="pic">-->
+            <!--<div>-->
+                <!--<ul>-->
+                    <!--<li>딸기</li>-->
+                    <!--<li id="info">빨개요</li>-->
+                    <!--<li>13000원</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+    <!--리스트형 메뉴-->
+    <div>
+        <table class="table table-hover" id="menuTable" style="border-top: 5px solid black; text-align: center">
+            <tbody>
+            <!--<tr>-->
+                <!--<td>사이다-->
+                    <!--<div id="info"> 톡쏘는 맛</div>-->
+                <!--</td>-->
+                <!--<td id="price">4000원</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>콜라-->
+                    <!--<div id="info"> 코카콜라/ 펩시콜라</div>-->
+                <!--</td>-->
+                <!--<td id="price">2000원</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>헤로인-->
+                    <!--<div id="info"> 중독의 맛</div>-->
+                <!--</td>-->
+                <!--<td id="price">600000원 </td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>이성훈-->
+                    <!--<div id="info"> 검정의 맛</div>-->
+                <!--</td>-->
+                <!--<td id="price">6000원 </td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>안서영-->
+                    <!--<div id="info"> 빨간 맛</div>-->
+                <!--</td>-->
+                <!--<td id="price">5200원 </td>-->
+            <!--</tr>-->
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--맨 아랫줄-->
+<div id="bottom">
+    <!--가격-->
+    <label id="totalPrice" style="background-color: black; width:60%; color: white; float: left; position:fixed; left:0; height: 150px; text-align:right;  padding: 20px;font-size: 65px;">0원</label>
+    <!--결재하기-->
+    <div style="width: 39%;float: right; height: 150px; position: fixed; bottom:0; right:0">
+        <button type="button" onClick=sendOrder() class="btn btn-secondary" style="width: 100%; height: 150px; font-size: 50px">결제하기</button>
+    </div>
+</div>
+<!-- 누르면 움직이는 곳-->
+<div>
+    <!--내가 선택한 것 확인-->
+    <div id="panel" style="overflow:auto; font-size: 40px;">
+        <table class="table" id="orderList">
+            <colgroup>
+                <col style="width: 20%">
+                <col style="width: 40%">
+                <col style="width: 40%">
+            </colgroup>
+            <tbody>
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<button type="button" class="btn btn-outline-dark" id="x">x</button>-->
+                <!--</td>-->
+                <!--<td>냉면</td>-->
+                <!--<td>-->
+                    <!--<form>-->
+                        <!--<input type="button" class="btn btn-outline-danger" style="font-size: 40px;" value=" - " >-->
+                        <!--<input type="text" name="amount" value="1" size="3" style="text-align: center">-->
+                        <!--<input type="button" class="btn btn-outline-primary" style="font-size: 40px;" value=" + " >-->
+                    <!--</form>-->
 
 
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<button type="button" class="btn btn-outline-dark" id="x">x</button>-->
+                <!--</td>-->
+                <!--<td> 치즈돈까스</td>-->
+                <!--<td>-->
+                    <!--<form>-->
+                        <!--<input type="button" class="btn btn-outline-danger" style="font-size: 40px;" value=" - " >-->
+                        <!--<input type="text" name="amount" value="1" size="3" style="text-align: center">-->
+                        <!--<input type="button" class="btn btn-outline-primary" style="font-size: 40px;" value=" + " >-->
+                    <!--</form>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<button type="button" class="btn btn-outline-dark" id="x">x</button>-->
+                <!--</td>-->
+                <!--<td>라면</td>-->
+                <!--<td>-->
+                    <!--<form>-->
+                        <!--<input type="button" class="btn btn-outline-danger" style="font-size: 40px;" value=" - " >-->
+                        <!--<input type="text" name="amount" value="1" size="3" style="text-align: center">-->
+                        <!--<input type="button" class="btn btn-outline-primary" style="font-size: 40px;" value=" + " >-->
+                    <!--</form>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<button type="button" class="btn btn-outline-dark" id="x">x</button>-->
+                <!--</td>-->
+                <!--<td>사이다</td>-->
+                <!--<td><form>-->
+                        <!--<input type="button" class="btn btn-outline-danger" style="font-size: 40px;" value=" - " >-->
+                        <!--<input type="text" name="amount" value="1" size="3" style="text-align: center">-->
+                        <!--<input type="button" class="btn btn-outline-primary" style="font-size: 40px;" value=" + " >-->
+                    <!--</form></td>-->
+            <!--</tr>-->
+            </tbody>
+        </table>
+    </div>
+    <!--올라오게 하는 버튼-->
+    <div id="flip"> <img src="/images/menu.jpg" style="height: 70px;width:100px; position: absolute; "></div>
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAWhKVEGr3o6rM4QQLTxgvArv_LCanc1EU",
+        authDomain: "godoforder-74975.firebaseapp.com",
+        databaseURL: "https://godoforder-74975.firebaseio.com",
+        projectId: "godoforder-74975",
+        storageBucket: "godoforder-74975.appspot.com",
+        messagingSenderId: "583480301154"
+    };
+    firebase.initializeApp(config);
+</script>
 <script src="/js/customer/customer.js"></script>
 </body>
+
 </html>

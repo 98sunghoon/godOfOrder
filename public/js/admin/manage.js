@@ -1,4 +1,6 @@
 var db = firebase.firestore();
+var storage = firebase.storage();
+var storageRef = storage.ref();
 var restId;
 var menus;
 var restaurants;
@@ -42,28 +44,33 @@ function restSave() {
         return;
     }
     var table = $("input[name=input_table]").val();
+    table = Number(table);
     if ($("input[name=input_serving]").prop("checked") && table == 0) {
         alert("테이블 수는 반드시 입력해야 합니다!");
         return;
     }
     var takeout = $("input[name=input_takeout]").prop("checked");
     var serving = $("input[name=input_serving]").prop("checked");
+    console.log(typeof(table));
     console.log(table);
     console.log(serving);
 
-    var manager = db.collection("managers").doc(uid);
+    // var manager = db.collection("managers").doc(uid);
     if (restId != "") {//점포 수정
+        console.log(restId);
         var setWithMerge = restaurants.doc(restId).set({
-            manager: manager,
+            // manager: manager,
             name: name,
             table: table,
             takeout: takeout,
             serving: serving
-        }, {merge: true});
+        }, {merge: true}).then(function () {
+            //메뉴 soldout 정보 push/ then 이동
+            location.href = 'home'
+        });
         // restId=restaurants.doc();
 
-        window.open('/qr?id=' + restId,"QRcode");
-        location.href = 'home'
+
     }
     // } else {//점포 새로 생성
     //     var newRest = db.collection("restaurants").doc();
@@ -101,35 +108,97 @@ function menuSave() {
         return
     }
     var description = $("input[name=input_menu_description]").val();
+    var imgURL;
 
-    var ref = menus.doc(id);
-    var setWithMerge = ref.set({
-        name: name,
-        price: price,
-        description: description
-    }, {merge: true});
+    var arae = document.getElementById('profile_pt').files;
+    var img = arae[0];
 
-    if ($("#" + id).length) {
-        // //요소 있음 -> 수정
-        // $("#"+id).children().eq(0).innerText = name;
-        // $("#"+id).children().eq(1).innerText = price;
-        // $("#"+id).children().eq(3).innerText = description;
+    if (img) {
+        //사진 업로드
+        var imageRef = storageRef.child('images/' + restId + '/' + id + ".png");
+        var metadata = {
+            contentType: 'image/png',
+        };
+        var uploadTask = imageRef.put(img, metadata);
+        uploadTask.on('state_changed', function (snapshot) {
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+                case firebase.storage.TaskState.PAUSED: // or 'paused'
+                    console.log('Upload is paused');
+                    break;
+                case firebase.storage.TaskState.RUNNING: // or 'running'
+                    console.log('Upload is running');
+                    break;
+            }
+        }, function (error) {
+            // Handle unsuccessful uploads
+        }, function () {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+                imgURL = downloadURL;
+                //업로드 후
+                var ref = menus.doc(id);
+                var setWithMerge = ref.set({
+                    name: name,
+                    price: price,
+                    description: description,
+                    image: imgURL
+                }, {merge: true});
 
-        $("#" + id).remove();
+                if ($("#" + id).length) {
+                    $("#" + id).remove();
+                }
+                let tmpDoc = {
+                    id: name.replace(/ /gi, ""),
+                    name: name,
+                    price: price,
+                    description: description,
+                    // image: imgURL
+                }
+                addMenu(tmpDoc);
+                resetMenuInfo();
+            });
+        });
+    }else{
+        var ref = menus.doc(id);
+        var setWithMerge = ref.set({
+            name: name,
+            price: price,
+            description: description,
+        }, {merge: true});
 
+        if ($("#" + id).length) {
+            $("#" + id).remove();
+        }
+        let tmpDoc = {
+            id: name.replace(/ /gi, ""),
+            name: name,
+            price: price,
+            description: description,
+        }
+        addMenu(tmpDoc);
+        resetMenuInfo();
     }
-    let tmpDoc = {
-        id: name.replace(/ /gi, ""),
-        // data:  {
-        //     name: name,
-        //     price: price,
-        //     description: description
-        // }
-        name: name,
-        price: price,
-        description: description
+    // console.log("image link : ", imageRef);
+
+    //db에 저장
+
+}
+
+function resetMenuInfo() {
+    $("input[name=input_menu_name]").val("");
+    $("input[name=input_menu_price]").val(0);
+    $("input[name=input_menu_description]").val("");
+    //이미지 지우기 (storage)
+    var preview = document.getElementById("View_area");
+    var prevImg = document.getElementById("prev_" + "View_area");
+    if (prevImg) {
+        preview.removeChild(prevImg);
     }
-    addMenu(tmpDoc);
 }
 
 function menuRead(id) {
@@ -138,7 +207,20 @@ function menuRead(id) {
             $("input[name=input_menu_name]").val(doc.data().name);
             $("input[name=input_menu_price]").val(doc.data().price);
             $("input[name=input_menu_description]").val(doc.data().description);
-
+            //이미지 불러오기 (storage)
+            var preview = document.getElementById("View_area"); //div id
+            var prevImg = document.getElementById("prev_" + "View_area"); //이전에 미리보기가 있다면 삭제
+            if (prevImg) {
+                preview.removeChild(prevImg);
+            }
+            var img = document.createElement("img");
+            img.id = "prev_View_area";
+            img.classList.add("obj");
+            img.src = doc.data().image;
+            img.style.width = '200px';
+            img.style.height = '200px';
+            preview.appendChild(img);
+            // $("#View_area").setAttribute("src",doc.data().image);
         } else {
             console.log("nonono");
         }
@@ -178,7 +260,7 @@ function addMenu(obj) {
     tag += "</td>\n";
 
     tag += "<td>\n";
-    tag += "<input type=\"button\" onclick=delMenu(\"" + obj.id + "\") />\n";
+    tag += "<input type=\"button\" class=\"btn btn-outline-dark\" style=\"height:10%\" onclick=delMenu(\"" + obj.id + "\") />\n";
     tag += "</td>\n";
 
     tag += "</tr>\n";
