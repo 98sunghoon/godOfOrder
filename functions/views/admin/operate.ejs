@@ -5,8 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>주문의 신_주문을 편리하게</title>
     <meta name="Manager" content="SalesBegin">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link rel="manifest" href="/manifest.json">
     <style type="text/css">
         body {
@@ -24,7 +25,7 @@
             width: 59.8%;
             height: 88%;
             float: left;
-            position:relative;
+            position: relative;
         }
 
         #right {
@@ -63,8 +64,7 @@
 
         #title {
             font-size: 20px;
-            font-family: "Arial Black", Gadget, sans-serif !important;
-        ;
+            font-family: "Arial Black", Gadget, sans-serif !important;;
             background-color: #656565;
             color: #ffffff;
             border-color: #656565;
@@ -153,99 +153,34 @@
 </script>
 <!--맨 윗 줄-->
 <div id="top">
-    <div> <img id="logo" src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height:90%; max-width: 50%">
-        <button type="button" name="logout" onclick=signOut() class="btn btn-outline-dark" style="float: right; max-height: 100%; max-width: 50%"> 로그아웃</button>
+    <div><img id="logo" src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height:90%; max-width: 50%">
+        <button type="button" name="logout" onclick=signOut() class="btn btn-outline-dark"
+                style="float: right; max-height: 100%; max-width: 50%"> 로그아웃
+        </button>
     </div>
 </div>
 <!--왼쪽-->
 <div id="left">
     <div style="width:100%; height: 100%; overflow:auto">
-
-
-        <table class=" table table-bordered table-hover" style="margin: 0; position:absolute; top: 0;
+        <table id="orderTable" class=" table table-bordered table-hover" style="margin: 0; position:absolute; top: 0;
                left: 0;">
-            <colgroup>
-                <col id="col-3">
-                <col>
-                <col id="col-1">
-                <col id="col-3">
-            </colgroup>
+            <thead>
             <tr>
-                <td id="title" colspan=4>ORER</td>
+                    <td id="title" colspan=4>ORER</td>
             </tr>
             <tr>
-                <th scope="col" class="firstline">No.</th>
-                <th scope="col" class="firstline">메뉴</th>
-                <th scope="col" class="firstline">수량</th>
-                <th scope="col" class="firstline">완료</th>
+                <th class="firstline">No.</th>
+                <th class="firstline">메뉴</th>
+                <th class="firstline">수량</th>
+                <th class="firstline">완료</th>
             </tr>
-        </table>
-
-        <table class=" table table-bordered table-hover" style="margin-top:110px;">
-            <colgroup>
-                <col id="col-3">
-                <col>
-                <col id="col-1">
-                <col id="col-3">
-            </colgroup>
-
-            <tbody>
-            <tr>
-                <th scope="row"></th>
-                <td>돈까스</td>
-                <td></td>
-                <td>
-                    <button type="button" name="logout" class="btn btn-outline-dark"> 완료</button>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td>치즈돈까스</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td>라면</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            </thead>
+            <!--여기서부터-->
+            <!--여기까지-->
         </table>
     </div>
 </div>
 <!--오른쪽-->
-
-
 
 
 <div id="right" style="overflow:auto;">
@@ -258,7 +193,7 @@
                 <col id="col-1">
             </colgroup>
             <tr>
-                <td id="title" colspan=4 >TODAY </td>
+                <td id="title" colspan=4>TODAY</td>
             </tr>
             <tr>
                 <th scope="col" class="firstline">시간</th>
@@ -268,7 +203,7 @@
             </tr>
         </table>
 
-        <table class=" table table-bordered table-hover" style="margin-top: 110px; " >
+        <table class=" table table-bordered table-hover" style="margin-top: 110px; ">
             <colgroup>
                 <col id="col-1">
                 <col>
@@ -325,19 +260,17 @@
             <col>
         </colgroup>
         <tr>
-            <td  style="text-align: center; border: 1px solid black;">총매출</td>
-            <td style="text-align: right; border: 1px solid black;" >원</td>
+            <td style="text-align: center; border: 1px solid black;">총매출</td>
+            <td style="text-align: right; border: 1px solid black;">원</td>
         </tr>
     </table>
 
 
-
-
-
 </div>
 <div id="right_bottom">
-
-    <button type="button" class="btn btn-primary" name="StoreClear" style="width: 100%; height: 50px;">점포생성/수정</button>
+    <button type="button" class="btn btn-primary" name="StoreClear" style="width: 100%; height: 50px;"
+            onclick=location.href='home'>영업 종료
+    </button>
 </div>
 
 

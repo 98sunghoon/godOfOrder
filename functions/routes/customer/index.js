@@ -1,110 +1,68 @@
 var express = require('express');
 var router = express.Router();
 var admin = require('firebase-admin');
-// var config = {
-//     apiKey: "AIzaSyAWhKVEGr3o6rM4QQLTxgvArv_LCanc1EU",
-//     authDomain: "godoforder-74975.firebaseapp.com",
-//     databaseURL: "https://godoforder-74975.firebaseio.com",
-//     projectId: "godoforder-74975",
-//     storageBucket: "godoforder-74975.appspot.com",
-//     messagingSenderId: "583480301154"
-// };
-// admin.initializeApp(config);
 var db = admin.firestore();
-//
-// var admin = require('firebase-admin');
-// var config = {
-//     apiKey: "AIzaSyDTvG8uhbteGGsxqrpUW5PHRre0NP2SP90",
-//     authDomain: "fir-example-317d1.firebaseapp.com",
-//     databaseURL: "https://fir-example-317d1.firebaseio.com",
-//     projectId: "fir-example-317d1",
-//     storageBucket: "fir-example-317d1.appspot.com",
-//     messagingSenderId: "1094442791549"
-// };
-// admin.initializeApp(config);
-//
-// var db = admin.firestore();
-
 
 /* GET users listing. */
 router.get('/menus?:id', function (req, res, next) {//id=restId
-    // res.redirect('/loginForm');
+    //SSR 바꾸기
     res.render('customer/customer');
-    // res.send("hi");
 });
 
-router.post('/order', function (req, res, next) {
+
+
+router.post('/order', function (req, res, next) {//매니저 토큰 받기, 주문 db에 추가하기
+    var tableNum = req.body.tableNum;
+    var total = req.body.total;
+    var basket = JSON.parse(req.body.basket);
     var restId = req.body.restId;
-    var body = req.body.data;
-    // var menuId = req.body.menuId;
-    // var amount = req.body.amount;
-    // var time = req.body.time;
-    var token;
-    //주문 정보 생성
-    var order = {
-        // menus: body.id,
-        // amount: body.amount,
-        total: parseInt(req.body.total),
-        
-        // time:
-    };
-    console.log(body);
-    db.collection("restaurants").doc(restId).get().then(function (doc) {
-        token = doc.data().token;
-        //날짜정보생성
-        var d = new Date();
-        var date=""+d.getFullYear()+d.getMonth()+d.getDate();
-        console.log(date,typeof(date));
-        //주문정보 db에 등록
-        db.collection("restaurants").doc(restId).collection("orders").doc(date).collection("today").add(order).then(function(docRef){
-            //manager에게 푸시 (간단 정보, 주문 키)
-            var registrationToken = token;
-            var message = {
-                notification: {
-                    "title": "주문 알림",
-                    "body": ""
-                },
-                data: {
-                    "orderId": docRef.id
-                },
-                token: registrationToken
-            };
-            admin.messaging().send(message)
-                .then((response) => {
-                    // Response is a message ID string.
-                    console.log('Successfully sent message:', response);
-                    res.send(true);
-                })
-                .catch((error) => {
-                    console.log('Error sending message:', error);
-                    res.send(false);
-                });
-        });
+    var customerToken = req.body.customerToken;
 
-        // console.log(message)
+    var managerToken;
 
-    })
+    //get manager's token
+    var restRef = db.collection("restaurants").doc(restId);
+    restRef.get().then(function(doc){
+        managerToken = doc.data().token;
+    }).catch(function(error){
+        console.log("cannot get manager Token",error);
+    });
+
+    //input data into database
+    restRef.collection("orders").add({
+        total:total,
+        tableNum:tableNum,
+        // time:new Date(),
+        basket:basket,
+        customerToken:customerToken,
+        done:false
+    }).then(function(docRef){
+        //push send with orderId(docRef.id)
+        //define message payload
+        var message = {
+            token: managerToken,
+            data: {
+                orderId: docRef.id,
+                // time: new Date()
+            }
+        };
+        admin.messaging().send(message)
+            .then((response) => {
+                // Response is a message ID string.
+                console.log('Successfully sent message:', response);
+                res.render("customer/receipt",{});
+            })
+            .catch((error) => {
+                console.log('Error sending message:', error);
+            });
+    }).catch(function(error){
+        // console.log();
+    });
 });
 
+router.get('/order?:id', function (req, res, next) {//id=restId
+    res.render('customer/order');
+});
 
 module.exports = router;
 
-// function getAccessToken() {
-//     return new Promise(function(resolve, reject) {
-//         var key = require('./service-account.json');
-//         var jwtClient = new google.auth.JWT(
-//             key.client_email,
-//             null,
-//             key.private_key,
-//             SCOPES,
-//             null
-//         );
-//         jwtClient.authorize(function(err, tokens) {
-//             if (err) {
-//                 reject(err);
-//                 return;
-//             }
-//             resolve(tokens.access_token);
-//         });
-//     });
-// }

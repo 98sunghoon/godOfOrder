@@ -11,7 +11,6 @@ var config = {
     messagingSenderId: "583480301154"
 };
 admin.initializeApp(config);
-
 var db = admin.firestore();
 
 
@@ -44,9 +43,29 @@ router.get('/operate?:id', function (req, res, next) {
     res.render('admin/operate');
 });
 
-router.post('/operate/token', function (req,res,next){
-    let token = req.body.token;
-    //FCM에 푸시 요청
+router.post('/operate', function (req, res, next) {
+    var restId = req.body.restId;
+    var orderId = req.body.orderId;
+    var orderRef = db.collection("restaurants").doc(restId).collection("orders").doc(orderId);
+    orderRef.get().then(function(order) {
+        var customerToken = order.data().customerToken;
+        var message = {
+            token: customerToken,
+            notification:{
+                "title":"hello",
+            }
+        };
+        admin.messaging().send(message)
+            .then((response) => {
+                // Response is a message ID string.
+                console.log('Successfully sent message:', response);
+                res.render("customer/receipt",{});
+            })
+            .catch((error) => {
+                console.log('Error sending message:', error);
+            });
+    });
+    res.send(true);
 });
 
 module.exports = router;

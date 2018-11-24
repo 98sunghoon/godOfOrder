@@ -1,53 +1,36 @@
+var db = firebase.firestore();
+const messaging = firebase.messaging();
+messaging.usePublicVapidKey('BCOh-JjtoWudxg1aLz0yC3CxZV6LtaL3UkAMy6GvvJ2-qY-EvO61E4yhS_veTvWZ1grkJTQOOlTf7GXqfZBcVIc');
+messaging.onTokenRefresh(function() {
+    messaging.getToken().then(function(refreshedToken) {
+        //orderId로 customerToken 수정
+    }).catch(function(err) {
+    });
+});
+messaging.onMessage(function(payload) {
+    console.log('Message received. ', payload);
+});
+
 var restId;
 var tableNum;
-var db = firebase.firestore();
+
 var totalPrice = 0;
-
-function sendOrder() {
-    console.log("order is sending now...")
-    //요청 body 만들기
-    let reqBody = [];
-    for (index in basket) {//index=menuId , basket[index]=amount
-        let obj = menuInfo.find(c => c.id === index);
-        reqBody.push({
-            id:obj.id,
-            amount:basket[index],
-            price:obj.price
-        });
-    }
-    //메세지 보내기
-    $.ajax({
-        url: "order",
-        type: "POST",
-        data: {
-            restId: restId, method: "POST", data: reqBody, total: totalPrice, tableNum: tableNum
-        },
-        dataType: "json",
-        success: function (result) {
-            switch (result) {
-                case true:
-                    console.log("send successful");
-                    break;
-                default:
-                    console.log("error occur while sending..")
-            }
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            alert(xhr.status);
-            alert(thrownError);
-        }
-    });
-
-}
-
-// function parsingBasketForSend() {
-//     let obj = menuInfo.find(c => c.id === menuId);
-// }
-
+var basket = {};
+var menuInfo = [];
+window.onload = function () {
+    init();
+};
 function init() {
     restId = getParameterByName('id');
     tableNum = getParameterByName('table');
     menuList();
+}
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 function menuList() {
@@ -79,7 +62,7 @@ function drawImageMenu(obj) {
 
     var tag = "";
     tag += "<div id=\"" + obj.id + "\" onclick=selectMenu(\"" + obj.id + "\")>";
-    console.log("id", obj.id);
+    // console.log("id", obj.id);
     tag += "<div id=\"menu\"> <img src=\"" + obj.image + "\" id=\"pic\">";
     tag += "<div>";
     tag += " <ul>";
@@ -106,9 +89,6 @@ function drawTableMenu(obj) {
 
     $("#menuTable").append(tag);
 }
-
-var basket = {}
-var menuInfo = []
 
 function selectMenu(menuId) {
     // var menuItem = document.getElementById(menuId);
@@ -176,7 +156,9 @@ function updateTotal() {
         // console.log("type of price : ",typeof(obj.price));
         total += obj.price * basket[index];
 
-        if(basket[index]==0){delete basket[index];}
+        if (basket[index] == 0) {
+            delete basket[index];
+        }
     }
     $("#totalPrice").html(total + "원");
     totalPrice = total;
@@ -184,19 +166,45 @@ function updateTotal() {
 
 }
 
-//메뉴 수량 조절
-// function updateOrderList(){
-//     //edit order table
-//     //update price
-// }
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+
+
+
+function sendOrder() {
+    messaging.requestPermission().then(function(){
+        messaging.getToken().then(function(currentToken){
+            console.log("order is sending now...");
+            //post payload
+            let data = {
+                restId: restId,
+                tableNum: tableNum,
+                total: totalPrice,
+                basket: JSON.stringify(basket),
+                customerToken: currentToken
+            };
+            post_to_url('order',data);
+        }).catch(function(error){
+           console.log("error in get customer token.. info:",error);
+        });
+    });
 }
 
-window.onload = function () {
-    init();
-};
+function post_to_url(path, params, method) {
+    method = method || "post"; // Set method to post by default, if not specified.
+
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for (var key in params) {
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", key);
+        hiddenField.setAttribute("value", params[key]);
+
+        form.appendChild(hiddenField);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
