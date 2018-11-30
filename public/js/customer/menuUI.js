@@ -1,119 +1,32 @@
-'use strict';
+const messaging = firebase.messaging();
 
-const applicationServerPublicKey = 'BCOh-JjtoWudxg1aLz0yC3CxZV6LtaL3UkAMy6GvvJ2-qY-EvO61E4yhS_veTvWZ1grkJTQOOlTf7GXqfZBcVIc';
+messaging.usePublicVapidKey('BCOh-JjtoWudxg1aLz0yC3CxZV6LtaL3UkAMy6GvvJ2-qY-EvO61E4yhS_veTvWZ1grkJTQOOlTf7GXqfZBcVIc');
+messaging.onTokenRefresh(function () {
+    messaging.getToken().then(function (refreshedToken) {
+        console.log('Token refreshed.');
+        sendTockenToMyServer();
+    }).catch(function (err) {
+        console.log('Unable to retrieve refreshed token ', err);
+        //홈으로
+    });
+});
+messaging.onMessage(function (payload) {
+    console.log('Message received. ', payload);
 
-const pushButton = document.querySelector('.js-push-btn');
-
-let isSubscribed = false;
-let swRegistration = null;
-
-function urlB64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/\-/g, '+')
-        .replace(/_/g, '/');
-
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-
-
-if ('serviceWorker' in navigator && 'PushManager' in window) {
-    console.log('Service Worker and Push is supported');
-
-    navigator.serviceWorker.register('/sw.js')
-        .then(function (swReg) {
-            console.log('Service Worker is registered', swReg);
-
-            swRegistration = swReg;
-            //초기작업
-            reqSub();
-        })
-        .catch(function (error) {
-            console.error('Service Worker Error', error);
+    navigator.serviceWorker.ready.then(function (registration) {
+        registration.showNotification('주문의 신', {
+            body: '주문하신 음식이 완성되었습니다!',
+            icon: '/images/Logo.jpg',
+            badge: '/images/Logo.jpg',
+            vibrate: [200, 100, 200, 100, 200, 100, 400],
         });
-} else {
-    console.warn('Push messaging is not supported');
-    pushButton.textContent = 'Push Not Supported';
-}
-
-function init() {
-    // Set the initial subscription value
-
-}
-
-function reqSub() {
-    swRegistration.pushManager.getSubscription()
-        .then(function (subscription) {
-            isSubscribed = !(subscription === null);
-
-            if (isSubscribed) {
-                console.log('User IS subscribed.');
-            } else {
-                console.log('User is NOT subscribed.');
-            }
-
-        });
-    if (!isSubscribed) {
-        subscribeUser();
-    }
-
-    swRegistration.pushManager.getSubscription()
-        .then(function (subscription) {
-            isSubscribed = !(subscription === null);
-
-            updateSubscriptionOnServer(subscription);
-
-            if (isSubscribed) {
-                console.log('User IS subscribed.');
-            } else {
-                console.log('User is NOT subscribed.');
-            }
-
-            // updateBtn();
-        });
-}
-
-
-function subscribeUser() {
-    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
-    swRegistration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: applicationServerKey
-    })
-        .then(function (subscription) {
-            console.log('User is subscribed:', subscription);
-            updateSubscriptionOnServer(subscription);
-            isSubscribed = true;
-        })
-        .catch(function (err) {
-            console.log('Failed to subscribe the user: ', err);
-        });
-}
-
-var cusSub;
-function updateSubscriptionOnServer(subscription) {
-    // TODO: Send subscription to application server
-
-    // const subscriptionJson = document.querySelector('.js-subscription-json');
-    // const subscriptionDetails =
-    //     document.querySelector('.js-subscription-details');
-    //
-    if (subscription) {
-
-        console.log(JSON.stringify(subscription));
-        cusSub=JSON.stringify(subscription);
-        // subscriptionDetails.classList.remove('is-invisible');
-    } else {
-        // subscriptionDetails.classList.add('is-invisible');
+    });
+});
+function refreshToken(){
+    if(orderId!=null){
+        //앱서버에게 토큰 새로고침 요청
     }
 }
-
 
 var db = firebase.firestore();
 
@@ -123,6 +36,7 @@ var tableNum;
 var totalPrice = 0;
 var basket = {};
 var menuInfo = [];
+var orderId,orderNum;
 
 window.onload = function () {
     init();
@@ -272,50 +186,37 @@ function updateTotal() {
     }
     $("#totalPrice").html(total + "원");
     totalPrice = total;
-
-
 }
 
 function sendOrder() {
-    var data = {
-        restId: restId,
-        tableNum: tableNum,
-        total: totalPrice,
-        basket: JSON.stringify(basket),
-        customerToken: cusSub
-    };
-    postSend(data);
+    messaging.requestPermission().then(function () {
+        messaging.getToken().then(function (currentToken) {
+            var data = {
+                restId: restId,
+                tableNum: tableNum,
+                total: totalPrice,
+                basket: JSON.stringify(basket),
+                customerToken: currentToken
+            };
+            postSend(data);
+        })
+    }).catch(function (error) {
+        console.log("fail to get permission //info : ", error);
+        //홈으로
+    });
 }
 
-function post_to_url(path, params, method) {
-    method = method || "post"; // Set method to post by default, if not specified.
-
-    var form = document.createElement("form");
-    form.setAttribute("method", method);
-    form.setAttribute("action", path);
-
-    for (var key in params) {
-        var hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", key);
-        hiddenField.setAttribute("value", params[key]);
-
-        form.appendChild(hiddenField);
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-}
-
-function postSend(data){
+function postSend(data) {
     $.ajax({
         type: "POST"
-        ,url: "/customer/order"
-        ,data: data
-        ,success:function(data){
-
+        , url: "/customer/order"
+        , data: data
+        , success: function (res) {
+            orderId = res.orderId;
+            // orderNum = res.orderNum;
+            location.href='receipt?rest='+restId+'&id='+orderId;
         }
-        ,error:function(data){
+        , error: function (data) {
             alert("error");
         }
     });

@@ -12,7 +12,6 @@ var config = {
 };
 admin.initializeApp(config);
 var db = admin.firestore();
-const webpush = require('web-push');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -48,20 +47,25 @@ router.post('/operate', function (req, res, next) {
     var orderId = req.body.orderId;
     console.log(restId,orderId);
     var orderRef = db.collection("restaurants").doc(restId).collection("orders").doc(orderId);
-    var pushSubscription;
-    orderRef.get().then(function(order){
-        pushSubscription = JSON.parse(order.data().customerToken);
 
-        const vapidKeys = webpush.generateVAPIDKeys();
-        webpush.setGCMAPIKey('AAAAh9oi1mI:APA91bGzWo2qVZLei7Ab0Oun2IA6Efb4B299KsM9lsAxhmgqUiogyLTnSGZe87JqLUDp5IpjPQrFQpyPZS8_Y-DPxjtYQhvZfU2XVmvoVCvbPTQ8hyvwMIJJX1YLgqcfwi-ngtpA3bTu');
-        webpush.setVapidDetails(
-            'mailto:example@yourdomain.org',
-            vapidKeys.publicKey,
-            vapidKeys.privateKey
-        );
-        webpush.sendNotification(pushSubscription, ""+order.data().orderNum).catch(function(error){
-            console.log("this is error : ",error);
-        });
+    orderRef.get().then(function(order){
+        var message = {
+            token: order.data().customerToken,
+            notification: {
+                title: "주문하신 음식이 준비되었습니다!",
+                body: order.data().orderNum,
+            }
+        };
+        admin.messaging().send(message)
+            .then((response) => {
+                // Response is a message ID string.
+                console.log('Successfully sent message:', response);
+            })
+            .catch((error) => {
+                console.log('Error sending message:', error);
+            });
+    }).catch(function(error){
+        console.log(error);
     });
 
 });

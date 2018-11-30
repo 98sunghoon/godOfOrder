@@ -51,7 +51,8 @@ router.post('/order', function (req, res, next) {//매니저 토큰 받기, 주�
             .then((response) => {
                 // Response is a message ID string.
                 console.log('Successfully sent message:', response);
-                res.render("customer/receipt",{});
+                // res.render("customer/receipt",{});
+                res.send({orderId:docRef.id});
             })
             .catch((error) => {
                 console.log('Error sending message:', error);
@@ -61,8 +62,17 @@ router.post('/order', function (req, res, next) {//매니저 토큰 받기, 주�
     });
 });
 
-router.get('/order?:id', function (req, res, next) {//id=restId
-    res.render('customer/order');
+router.get('/receipt', function (req, res, next) {//id=restId
+    console.log(req.query.rest);
+    console.log(req.query.id);
+
+    var restRef = db.collection("restaurants").doc(restId);
+    restRef.get().then(function(doc){
+        managerToken = doc.data().token;
+    }).catch(function(error){
+        console.log("cannot get manager Token",error);
+    });
+    res.render('customer/receipt');
 });
 
 module.exports = router;

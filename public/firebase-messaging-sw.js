@@ -7,45 +7,16 @@ importScripts('/__/firebase/init.js');
 
 var messaging = firebase.messaging();
 
-/**
- * Here is is the code snippet to initialize Firebase Messaging in the Service
- * Worker when your app is not hosted on Firebase Hosting.
-
- // [START initialize_firebase_in_sw]
- // Give the service worker access to Firebase Messaging.
- // Note that you can only use Firebase Messaging here, other Firebase libraries
- // are not available in the service worker.
- importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
- importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
-
- // Initialize the Firebase app in the service worker by passing in the
- // messagingSenderId.
- firebase.initializeApp({
-   'messagingSenderId': 'YOUR-SENDER-ID'
- });
-
- // Retrieve an instance of Firebase Messaging so that it can handle background
- // messages.
- const messaging = firebase.messaging();
- // [END initialize_firebase_in_sw]
- **/
-
-
-// If you would like to customize notifications that are received in the
-// background (Web app is closed or not in browser focus) then you should
-// implement this optional method.
-// [START background_handler]
 messaging.setBackgroundMessageHandler(function (payload) {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
-    // Customize notification here
-    var notificationTitle = payload.data.title;
-    var notificationOptions = {
-        body: payload.data.body,
+
+    const title = '주문의 신';
+    const options = {
+        body: '주문하신 음식이 완성되었습니다!',
         icon: '/images/Logo.jpg',
+        badge: '/images/Logo.jpg',
         vibrate: [200, 100, 200, 100, 200, 100, 400],
     };
-
-    return self.registration.showNotification(notificationTitle,
-        notificationOptions);
+    return self.registration.showNotification(title,
+        options);
 });
-// [END background_handler]
