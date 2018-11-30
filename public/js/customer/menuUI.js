@@ -1,16 +1,121 @@
+'use strict';
+
+const applicationServerPublicKey = 'BCOh-JjtoWudxg1aLz0yC3CxZV6LtaL3UkAMy6GvvJ2-qY-EvO61E4yhS_veTvWZ1grkJTQOOlTf7GXqfZBcVIc';
+
+const pushButton = document.querySelector('.js-push-btn');
+
+let isSubscribed = false;
+let swRegistration = null;
+
+function urlB64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+    console.log('Service Worker and Push is supported');
+
+    navigator.serviceWorker.register('/sw.js')
+        .then(function (swReg) {
+            console.log('Service Worker is registered', swReg);
+
+            swRegistration = swReg;
+            //초기작업
+            reqSub();
+        })
+        .catch(function (error) {
+            console.error('Service Worker Error', error);
+        });
+} else {
+    console.warn('Push messaging is not supported');
+    pushButton.textContent = 'Push Not Supported';
+}
+
+function init() {
+    // Set the initial subscription value
+
+}
+
+function reqSub() {
+    swRegistration.pushManager.getSubscription()
+        .then(function (subscription) {
+            isSubscribed = !(subscription === null);
+
+            if (isSubscribed) {
+                console.log('User IS subscribed.');
+            } else {
+                console.log('User is NOT subscribed.');
+            }
+
+        });
+    if (!isSubscribed) {
+        subscribeUser();
+    }
+
+    swRegistration.pushManager.getSubscription()
+        .then(function (subscription) {
+            isSubscribed = !(subscription === null);
+
+            updateSubscriptionOnServer(subscription);
+
+            if (isSubscribed) {
+                console.log('User IS subscribed.');
+            } else {
+                console.log('User is NOT subscribed.');
+            }
+
+            // updateBtn();
+        });
+}
+
+
+function subscribeUser() {
+    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+    swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: applicationServerKey
+    })
+        .then(function (subscription) {
+            console.log('User is subscribed:', subscription);
+            updateSubscriptionOnServer(subscription);
+            isSubscribed = true;
+        })
+        .catch(function (err) {
+            console.log('Failed to subscribe the user: ', err);
+        });
+}
+
+var cusSub;
+function updateSubscriptionOnServer(subscription) {
+    // TODO: Send subscription to application server
+
+    // const subscriptionJson = document.querySelector('.js-subscription-json');
+    // const subscriptionDetails =
+    //     document.querySelector('.js-subscription-details');
+    //
+    if (subscription) {
+
+        console.log(JSON.stringify(subscription));
+        cusSub=JSON.stringify(subscription);
+        // subscriptionDetails.classList.remove('is-invisible');
+    } else {
+        // subscriptionDetails.classList.add('is-invisible');
+    }
+}
+
+
 var db = firebase.firestore();
-// const messaging = firebase.messaging();
-// messaging.usePublicVapidKey('BCOh-JjtoWudxg1aLz0yC3CxZV6LtaL3UkAMy6GvvJ2-qY-EvO61E4yhS_veTvWZ1grkJTQOOlTf7GXqfZBcVIc');
-// messaging.onTokenRefresh(function() {
-//     messaging.getToken().then(function(refreshedToken) {
-//         //orderId로 customerToken 수정
-//     }).catch(function(err) {
-//     });
-// });
-// messaging.onMessage(function(payload) {
-//     console.log('Message received. ', payload);
-//     alert("message received!!");
-// });
 
 var restId;
 var tableNum;
@@ -18,9 +123,11 @@ var tableNum;
 var totalPrice = 0;
 var basket = {};
 var menuInfo = [];
+
 window.onload = function () {
     init();
 };
+
 function init() {
     restId = getParameterByName('id');
     tableNum = getParameterByName('table');
@@ -153,7 +260,7 @@ function deleteMenu(menuId) {
 
 function updateTotal() {
     var total = 0;
-    for (index in basket) {//index=menuId , basket[index]=amount
+    for (var index in basket) {//index=menuId , basket[index]=amount
         var ob = menuInfo.find(c => c.id === index);
 
         // console.log("type of price : ",typeof(obj.price));
@@ -169,27 +276,15 @@ function updateTotal() {
 
 }
 
-
-
-
-
 function sendOrder() {
-    messaging.requestPermission().then(function(){
-        messaging.getToken().then(function(currentToken){
-            console.log("order is sending now...");
-            //post payload
-            var data = {
-                restId: restId,
-                tableNum: tableNum,
-                total: totalPrice,
-                basket: JSON.stringify(basket),
-                customerToken: currentToken
-            };
-            postSend(data);
-        }).catch(function(error){
-           console.log("error in get customer token.. info:",error);
-        });
-    });
+    var data = {
+        restId: restId,
+        tableNum: tableNum,
+        total: totalPrice,
+        basket: JSON.stringify(basket),
+        customerToken: cusSub
+    };
+    postSend(data);
 }
 
 function post_to_url(path, params, method) {
@@ -225,5 +320,4 @@ function postSend(data){
         }
     });
 }
-
 

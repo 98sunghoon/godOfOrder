@@ -12,7 +12,7 @@ var config = {
 };
 admin.initializeApp(config);
 var db = admin.firestore();
-
+const webpush = require('web-push');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -46,27 +46,24 @@ router.get('/operate?:id', function (req, res, next) {
 router.post('/operate', function (req, res, next) {
     var restId = req.body.restId;
     var orderId = req.body.orderId;
+    console.log(restId,orderId);
     var orderRef = db.collection("restaurants").doc(restId).collection("orders").doc(orderId);
-    orderRef.get().then(function(order) {
-        var messageBody = "주문의 신 : 주문번호 "+orderRef.data().orderNum+"님! 음식 나왔습니다!";
-        var customerToken = order.data().customerToken;
-        var message = {
-            token: customerToken,
-            notification:{
-                "title":"hello",
-                "body": messageBody
-            }
-        };
-        admin.messaging().send(message)
-            .then((response) => {
-                // Response is a message ID string.
-                console.log('Successfully sent message:', response);
-            })
-            .catch((error) => {
-                console.log('Error sending message:', error);
-            });
+    var pushSubscription;
+    orderRef.get().then(function(order){
+        pushSubscription = JSON.parse(order.data().customerToken);
+
+        const vapidKeys = webpush.generateVAPIDKeys();
+        webpush.setGCMAPIKey('AAAAh9oi1mI:APA91bGzWo2qVZLei7Ab0Oun2IA6Efb4B299KsM9lsAxhmgqUiogyLTnSGZe87JqLUDp5IpjPQrFQpyPZS8_Y-DPxjtYQhvZfU2XVmvoVCvbPTQ8hyvwMIJJX1YLgqcfwi-ngtpA3bTu');
+        webpush.setVapidDetails(
+            'mailto:example@yourdomain.org',
+            vapidKeys.publicKey,
+            vapidKeys.privateKey
+        );
+        webpush.sendNotification(pushSubscription, ""+order.data().orderNum).catch(function(error){
+            console.log("this is error : ",error);
+        });
     });
-    res.send("success!!");
+
 });
 
 module.exports = router;

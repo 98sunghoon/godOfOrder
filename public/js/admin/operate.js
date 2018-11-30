@@ -166,7 +166,6 @@ function addOrderToCompleteTable(obj) {
     tag += "</td>"
     tag += "<td>" + obj.total + "</td>";
     tag += "</tr>";
-    console.log(tag);
     $("#receiptTable").append(tag);
 }
 
