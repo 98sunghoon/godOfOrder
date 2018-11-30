@@ -166,7 +166,7 @@
                left: 0;">
             <thead>
             <tr>
-                    <td id="title" colspan=4>ORER</td>
+                <td id="title" colspan=4>ORER</td>
             </tr>
             <tr>
                 <th class="firstline">No.</th>
@@ -185,88 +185,82 @@
 
 <div id="right" style="overflow:auto;">
     <div style="width:100%; height: 100%; overflow:auto">
-        <table class=" table table-bordered table-hover" style="position: absolute; top: 0; left: 0; margin: 0;">
-            <colgroup>
-                <col id="col-1">
-                <col>
-                <col id="col-1">
-                <col id="col-1">
-            </colgroup>
+        <table id="receiptTable" class=" table table-bordered table-hover"
+               style="position: absolute; top: 0; left: 0; margin: 0;">
+            <!--<colgroup>-->
+            <!--<col id="col-1">-->
+            <!--<col>-->
+            <!--<col id="col-1">-->
+            <!--<col id="col-1">-->
+            <!--</colgroup>-->
+
+            <thead>
             <tr>
                 <td id="title" colspan=4>TODAY</td>
             </tr>
-            <tr>
-                <th scope="col" class="firstline">시간</th>
-                <th scope="col" class="firstline">메뉴</th>
-                <th scope="col" class="firstline">가격</th>
-                <th scope="col" class="firstline">결제</th>
-            </tr>
+            <th style="width:100px" scope="col" class="firstline">시간</th>
+            <th scope="col" class="firstline">메뉴</th>
+            <th scope="col" class="firstline">가격</th>
+            </thead>
         </table>
 
-        <table class=" table table-bordered table-hover" style="margin-top: 110px; ">
-            <colgroup>
-                <col id="col-1">
-                <col>
-                <col id="col-1">
-                <col id="col-1">
-            </colgroup>
+        <!--<table class=" table table-bordered table-hover" style="margin-top: 110px; ">-->
+        <!--<colgroup>-->
+        <!--<col id="col-1">-->
+        <!--<col>-->
+        <!--<col id="col-1">-->
+        <!--<col id="col-1">-->
+        <!--</colgroup>-->
 
-            <tbody>
+        <!--<tbody>-->
+        <!--<tr>-->
+        <!--<th scope="row"></th>-->
+        <!--<td>김치만두, 왕만두, 돈까스</td>-->
+        <!--<td></td>-->
+        <!--<td></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+        <!--<th scope="row"></th>-->
+        <!--<td>치즈돈까스</td>-->
+        <!--<td></td>-->
+        <!--<td></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+        <!--<th scope="row"></th>-->
+        <!--<td>라면 김밥</td>-->
+        <!--<td></td>-->
+        <!--<td></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+        <!--<th scope="row"></th>-->
+        <!--<td></td>-->
+        <!--<td></td>-->
+        <!--<td></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+        <!--<th scope="row"></th>-->
+        <!--<td></td>-->
+        <!--<td></td>-->
+        <!--<td></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+        <!--<th scope="row"></th>-->
+        <!--<td></td>-->
+        <!--<td></td>-->
+        <!--<td></td>-->
+        <!--</tr>-->
+        <!--</table>-->
+        <!--</div>-->
+        <table class=" table table-bordered table-hover" style="position: absolute; bottom: 0; left: 0; margin: 0;">
             <tr>
-                <th scope="row"></th>
-                <td>김치만두, 왕만두, 돈까스</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td>치즈돈까스</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td>라면 김밥</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td style="text-align: center; border: 1px solid black;">총매출</td>
+                <td id="total" style="text-align: right; border: 1px solid black;">원</td>
             </tr>
         </table>
     </div>
-
-    <table class=" table table-bordered table-hover" style="position: absolute; bottom: 0; left: 0; margin: 0;">
-        <colgroup>
-            <col>
-            <col>
-            <col>
-            <col>
-            <col>
-        </colgroup>
-        <tr>
-            <td style="text-align: center; border: 1px solid black;">총매출</td>
-            <td style="text-align: right; border: 1px solid black;">원</td>
-        </tr>
-    </table>
-
-
 </div>
+
+
 <div id="right_bottom">
     <button type="button" class="btn btn-primary" name="StoreClear" style="width: 100%; height: 50px;"
             onclick=location.href='home'>영업 종료

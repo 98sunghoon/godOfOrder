@@ -48,24 +48,25 @@ router.post('/operate', function (req, res, next) {
     var orderId = req.body.orderId;
     var orderRef = db.collection("restaurants").doc(restId).collection("orders").doc(orderId);
     orderRef.get().then(function(order) {
+        var messageBody = "주문의 신 : 주문번호 "+orderRef.data().orderNum+"님! 음식 나왔습니다!";
         var customerToken = order.data().customerToken;
         var message = {
             token: customerToken,
             notification:{
                 "title":"hello",
+                "body": messageBody
             }
         };
         admin.messaging().send(message)
             .then((response) => {
                 // Response is a message ID string.
                 console.log('Successfully sent message:', response);
-                res.render("customer/receipt",{});
             })
             .catch((error) => {
                 console.log('Error sending message:', error);
             });
     });
-    res.send(true);
+    res.send("success!!");
 });
 
 module.exports = router;

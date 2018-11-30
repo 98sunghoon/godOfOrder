@@ -51,9 +51,6 @@ function restSave() {
     }
     var takeout = $("input[name=input_takeout]").prop("checked");
     var serving = $("input[name=input_serving]").prop("checked");
-    console.log(typeof(table));
-    console.log(table);
-    console.log(serving);
 
     // var manager = db.collection("managers").doc(uid);
     if (restId != "") {//점포 수정

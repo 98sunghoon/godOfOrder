@@ -1,0 +1,58 @@
+<html>
+<head>
+
+</head>
+<body>
+    <p>
+        로딩중입니다...
+    </p>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var currentOS = "else";
+            var mobile = (/iphone|ipad|ipod|android/i.test(navigator.userAgent.toLowerCase()));
+
+
+            if (mobile) {
+                var userAgent = navigator.userAgent.toLowerCase();
+                if (userAgent.search("android") > -1)
+                    currentOS = "android";
+                else if ((userAgent.search("iphone") > -1) || (userAgent.search("ipod") > -1) || (userAgent.search("ipad") > -1))
+                    currentOS = "ios";
+                else
+                    currentOS = "else";
+            }
+            if(currentOS == "android"){
+                // Android
+                var url = location.href;
+                if(location.protocol == "http"){
+                    url = url.substr(8);
+                }else{
+                    url = url.substr(7);
+                }
+                url = url.replace("s?","?");
+                window.open("intent://"+url+"#Intent;scheme=http;package=com.android.chrome;end");
+            }else if(currentOS == "ios"){
+                // IOS
+                var url = location.href;
+                if(location.protocol == "http"){
+                    url = url.substr(8);
+                }else{
+                    url = url.substr(7);
+                }
+                url = url.replace("s?","?");
+                window.open("googlechrome://"+url);
+            }
+            var url = location.href;
+            if(location.protocol == "http"){
+                url = url.substr(8);
+            }else{
+                url = url.substr(7);
+            }
+
+        });
+
+    </script>
+    <!--<script type="text/javascript" src="/js/customer/check.js"></script>-->
+</body>
+</html>

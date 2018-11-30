@@ -1,15 +1,16 @@
 var db = firebase.firestore();
-const messaging = firebase.messaging();
-messaging.usePublicVapidKey('BCOh-JjtoWudxg1aLz0yC3CxZV6LtaL3UkAMy6GvvJ2-qY-EvO61E4yhS_veTvWZ1grkJTQOOlTf7GXqfZBcVIc');
-messaging.onTokenRefresh(function() {
-    messaging.getToken().then(function(refreshedToken) {
-        //orderId로 customerToken 수정
-    }).catch(function(err) {
-    });
-});
-messaging.onMessage(function(payload) {
-    console.log('Message received. ', payload);
-});
+// const messaging = firebase.messaging();
+// messaging.usePublicVapidKey('BCOh-JjtoWudxg1aLz0yC3CxZV6LtaL3UkAMy6GvvJ2-qY-EvO61E4yhS_veTvWZ1grkJTQOOlTf7GXqfZBcVIc');
+// messaging.onTokenRefresh(function() {
+//     messaging.getToken().then(function(refreshedToken) {
+//         //orderId로 customerToken 수정
+//     }).catch(function(err) {
+//     });
+// });
+// messaging.onMessage(function(payload) {
+//     console.log('Message received. ', payload);
+//     alert("message received!!");
+// });
 
 var restId;
 var tableNum;
@@ -39,19 +40,19 @@ function menuList() {
         console.log(ref.data().name);
         db.collection("restaurants").doc(restId).collection("menus").get().then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
-                let obj = {
+                var ob = {
                     'id': doc.id,
                     'name': doc.data().name,
                     'detail': doc.data().description,
                     'price': doc.data().price,
                     "image": doc.data().image,
                 };
-                if (obj.image) {
-                    drawImageMenu(obj);
+                if (ob.image) {
+                    drawImageMenu(ob);
                 } else {
-                    drawTableMenu(obj);
+                    drawTableMenu(ob);
                 }
-                menuInfo.push(obj);
+                menuInfo.push(ob);
                 // console.log(menuInfo);
             })
         });
@@ -107,7 +108,8 @@ function selectMenu(menuId) {
 }
 
 function addMenuToList(menuId) {
-    let obj = menuInfo.find(c => c.id === menuId);
+    var ob = menuInfo.find(c => c.id === menuId);
+    // var ob = menuInfo[0];
     var tag = "";
     tag += "<tr id=\"s" + menuId + "\">";
     tag += "<td>";
@@ -116,7 +118,7 @@ function addMenuToList(menuId) {
     // console.log("name",$("#"+menuId).children('#name').innerHTML);
     // const findArr = [{name:"lemon", age:17}, {name:"candy", age:27}];
     // {name:"candy", age:27}
-    tag += "<td>" + obj.name + "</td>";
+    tag += "<td>" + ob.name + "</td>";
     tag += "<td>";
     tag += "<form>";
     tag += "<input type=\"button\" class=\"btn btn-outline-danger\" style=\"font-size: 40px;\" value=\" - \" onclick=decreaseAmount(\"" + menuId + "\")>";
@@ -152,9 +154,10 @@ function deleteMenu(menuId) {
 function updateTotal() {
     var total = 0;
     for (index in basket) {//index=menuId , basket[index]=amount
-        let obj = menuInfo.find(c => c.id === index);
+        var ob = menuInfo.find(c => c.id === index);
+
         // console.log("type of price : ",typeof(obj.price));
-        total += obj.price * basket[index];
+        total += ob.price * basket[index];
 
         if (basket[index] == 0) {
             delete basket[index];
@@ -175,14 +178,14 @@ function sendOrder() {
         messaging.getToken().then(function(currentToken){
             console.log("order is sending now...");
             //post payload
-            let data = {
+            var data = {
                 restId: restId,
                 tableNum: tableNum,
                 total: totalPrice,
                 basket: JSON.stringify(basket),
                 customerToken: currentToken
             };
-            post_to_url('order',data);
+            postSend(data);
         }).catch(function(error){
            console.log("error in get customer token.. info:",error);
         });
@@ -208,3 +211,19 @@ function post_to_url(path, params, method) {
     document.body.appendChild(form);
     form.submit();
 }
+
+function postSend(data){
+    $.ajax({
+        type: "POST"
+        ,url: "/customer/order"
+        ,data: data
+        ,success:function(data){
+
+        }
+        ,error:function(data){
+            alert("error");
+        }
+    });
+}
+
+

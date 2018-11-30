@@ -17,13 +17,15 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
-// app.use('/', require('./routes'));
+
 app.use('/', require('./routes/admin'));
 app.use('/customer', require('./routes/customer'));
-// app.use('/admin', require('./routes/admin'));
-// app.use('/', require('/admin'));
+
 
 
 app.use(function(req, res, next) {

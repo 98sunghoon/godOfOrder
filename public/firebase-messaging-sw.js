@@ -35,16 +35,17 @@ var messaging = firebase.messaging();
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 // [START background_handler]
-messaging.setBackgroundMessageHandler(function(payload) {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  // Customize notification here
-  var notificationTitle = 'Background Message Title';
-  var notificationOptions = {
-    body: 'Background Message body.',
-    // icon: '/firebase-logo.png'
-  };
+messaging.setBackgroundMessageHandler(function (payload) {
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    // Customize notification here
+    var notificationTitle = payload.data.title;
+    var notificationOptions = {
+        body: payload.data.body,
+        icon: '/images/Logo.png',
+        vibrate: [200, 100, 200, 100, 200, 100, 400],
+    };
 
-  return self.registration.showNotification(notificationTitle,
-    notificationOptions);
+    return self.registration.showNotification(notificationTitle,
+        notificationOptions);
 });
 // [END background_handler]

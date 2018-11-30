@@ -4,12 +4,14 @@ var admin = require('firebase-admin');
 var db = admin.firestore();
 
 /* GET users listing. */
-router.get('/menus?:id', function (req, res, next) {//id=restId
-    //SSR 바꾸기
-    res.render('customer/customer');
+router.get('/menus?:id', function (req, res, next) {
+    res.render('customer/check');
 });
 
-
+router.get('/menu?:id',function(req,res,next){//id=restId
+    //SSR 바꾸기
+    res.render('customer/customer');
+})
 
 router.post('/order', function (req, res, next) {//매니저 토큰 받기, 주문 db에 추가하기
     var tableNum = req.body.tableNum;
@@ -32,7 +34,7 @@ router.post('/order', function (req, res, next) {//매니저 토큰 받기, 주�
     restRef.collection("orders").add({
         total:total,
         tableNum:tableNum,
-        // time:new Date(),
+        time:new Date(),
         basket:basket,
         customerToken:customerToken,
         done:false
@@ -43,7 +45,6 @@ router.post('/order', function (req, res, next) {//매니저 토큰 받기, 주�
             token: managerToken,
             data: {
                 orderId: docRef.id,
-                // time: new Date()
             }
         };
         admin.messaging().send(message)
