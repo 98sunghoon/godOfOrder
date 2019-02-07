@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>basic example</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <style type="text/css">
+        th {
+            text-align: center;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        * {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+        .subpage {
+            /*border: 0.1px black solid;*/
+            background:#fff;
+            height: 257mm;
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            html, body {
+                width: 210mm;
+                height: 297mm;
+            }
+            .page {
+                margin: 0;
+                border: initial;
+                width: initial;
+                min-height: initial;
+                box-shadow: initial;
+                background: initial;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+
+<div class="subpage" >
+    <table class="table table-bordered table-hover" style="text-align: center; max-width: 100%" id="qrPanel"></table>
+</div>
+
+<script type="text/javascript" src="/js/jquery.qrcode.min.js"></script>
+<script src="/js/admin/FCqr.js"></script>
+</body>
+</html>

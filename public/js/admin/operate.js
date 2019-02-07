@@ -131,12 +131,12 @@ function addOrderToOrderTable(obj) {
     var tag = "";
     // tag += "<tr id=\"" + obj.orderId + "\">";
     for (let i = 0; i < menuKeys.length; i++) {
-        tag += "<tr id=\"" + obj.orderId + "\">";
+        tag += "<tr id=\"" + obj.orderId + "\" name='" + obj.orderId + "'>";
         if (i == 0) {
             tag += "<td rowspan=\"" + menuKeys.length + "\">" + obj.orderNum + "</td>";
         }
         tag += "<td>" + menuKeys[i] + "</td>";
-        tag += "<td>" + basket[menuKeys[i]] + "</td>";
+        tag += "<td style='text-align: center'>" + basket[menuKeys[i]] + "</td>";
         if (i == 0) {
             tag += "<td rowspan=\"" + menuKeys.length + "\">";
             tag += "<button type=\"button\"  class=\"btn btn-outline-dark\" onclick=orderComplete(\"" + obj.orderId + "\")> 완료</button>";
@@ -164,7 +164,7 @@ function addOrderToCompleteTable(obj) {
     }
     tag += menuString;
     tag += "</td>"
-    tag += "<td>" + obj.total + "</td>";
+    tag += "<td style='text-align: right'>" + obj.total + "원</td>";
     tag += "</tr>";
     $("#receiptTable").append(tag);
 }
@@ -193,15 +193,18 @@ function orderComplete(orderId) {
             time: order.data().time,
             basket: order.data().basket,
             total: order.data().total
-        })
-        updateTotal(order.data().total);
+        });
+        updateTotal(parseInt(order.data().total));
     });
     //db 변경
     db.collection("restaurants").doc(restId).collection("orders").doc(orderId).update({
         complete: true
+    }).then(function () {
+        // window.location.reload();
     });
+    $("tr[name="+orderId+"]").remove();
 
-    window.location.reload();
+
 }
 
 //trigger when order complete
@@ -210,20 +213,22 @@ function updateTotal(totalOfOrder) {
     db.runTransaction(function (transaction) {
         // This code may get re-run multiple times if there are conflicts.
         return transaction.get(restRef).then(function (rest) {
-            revenue = rest.data().revenue;
-            today = getToday();
+            var revenue = rest.data().revenue;
+            var today = getToday();
             //get and update todaysales
             if (!revenue.hasOwnProperty(today)) {//오늘의 첫주문
                 revenue[today] = totalOfOrder;
                 transaction.update(restRef, {revenue: revenue});
                 console.log(totalOfOrder);
-                $("#total").innerHTML=totalOfOrder;
+                $("#total").val(totalOfOrder + "원");
             } else {
+                console.log(typeof(revenue[today]));
                 console.log(revenue[today]);
                 revenue[today] += totalOfOrder;
                 transaction.update(restRef, {revenue: revenue});
-                $("#total").innerHTML=revenue[today]+"원";
+                $("#total").val(revenue[today] + "원");
             }
+
         });
     })
 }
@@ -236,8 +241,6 @@ window.onload = function () {
 };
 
 function init() {
-    //authorize
-    // console.log()
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
         } else {
@@ -246,9 +249,6 @@ function init() {
         }
     });
     console.log("init");
-
-    // console.log(restId);
-    // restRead();
 }
 
 function signOut() {
@@ -267,9 +267,18 @@ function getParameterByName(name) {
 }
 
 function getToday() {
-    let d = new Date();
-    let date = "" + d.getFullYear() + d.getMonth() + d.getDate();
-    return date;
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+    today = '' + mm + dd + yyyy;
+    return today;
 }
 
 function post_to_url(path, params, method) {
@@ -305,11 +314,4 @@ function postSend(data) {
         }
     });
 }
-
-function handleSubmit(event) {
-    console.log("waiting...")
-    // event.preventDefault();
-    return false;
-};
-
 

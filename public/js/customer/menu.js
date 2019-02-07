@@ -4,7 +4,7 @@ messaging.usePublicVapidKey('BCOh-JjtoWudxg1aLz0yC3CxZV6LtaL3UkAMy6GvvJ2-qY-EvO6
 messaging.onTokenRefresh(function () {
     messaging.getToken().then(function (refreshedToken) {
         console.log('Token refreshed.');
-        sendTockenToMyServer();
+
     }).catch(function (err) {
         console.log('Unable to retrieve refreshed token ', err);
         //홈으로
@@ -35,11 +35,14 @@ var tableNum;
 
 var totalPrice = 0;
 var basket = {};
+var priceInfo = {};
 var menuInfo = [];
 var orderId,orderNum;
 
 window.onload = function () {
     init();
+    var IMP = window.IMP; // 생략가능
+    IMP.init('imp30817358');
 };
 
 function init() {
@@ -83,14 +86,14 @@ function menuList() {
 function drawImageMenu(obj) {
 
     var tag = "";
-    tag += "<div id=\"" + obj.id + "\" onclick=selectMenu(\"" + obj.id + "\")>";
+    tag += "<div  id=\"" + obj.id + "\" onclick=selectMenu(\"" + obj.id + "\")>";
     // console.log("id", obj.id);
-    tag += "<div id=\"menu\"> <img src=\"" + obj.image + "\" id=\"pic\">";
+    tag += "<div style=\"height:550px;\" id=\"menu\"> <img src=\"" + obj.image + "\" id=\"pic\" style=\"height:300px\">";
     tag += "<div>";
     tag += " <ul>";
     tag += "<li >" + obj.name + "</li>";//id="name"
     tag += "<li id=\"info\">" + obj.detail + "</li>";
-    tag += "<li >" + obj.price + "원</li>";//id="price"
+    tag += "<li style=\"\">" + obj.price + "원</li>";//id="price"
     tag += "</ul>";
     tag += "</div>";
     tag += "</div>";
@@ -124,13 +127,15 @@ function selectMenu(menuId) {
         // console.log("add");
         increaseAmount(menuId);
     }
-    console.log('basket', basket);
     updateTotal();
 }
 
 function addMenuToList(menuId) {
     var ob = menuInfo.find(c => c.id === menuId);
     // var ob = menuInfo[0];
+    // 가격정보 여기서 저장
+    priceInfo[menuId]=ob.price;
+
     var tag = "";
     tag += "<tr id=\"s" + menuId + "\">";
     tag += "<td>";
@@ -143,7 +148,7 @@ function addMenuToList(menuId) {
     tag += "<td>";
     tag += "<form>";
     tag += "<input type=\"button\" class=\"btn btn-outline-danger\" style=\"font-size: 40px;\" value=\" - \" onclick=decreaseAmount(\"" + menuId + "\")>";
-    tag += "<input type=\"text\" name=\"amount\" value=" + basket[menuId] + " size=\"3\" style=\"text-align: center\">";
+    tag += "<input type=\"text\" disabled=\"true\" name=\"amount\" value=" + basket[menuId] + " size=\"3\" style=\"text-align: center\">";
     tag += "<input type=\"button\" class=\"btn btn-outline-primary\" style=\"font-size: 40px;\" value=\" + \" onclick=increaseAmount(\"" + menuId + "\")>";
     tag += "</form>";
     tag += "</td>";
@@ -196,14 +201,45 @@ function sendOrder() {
                 tableNum: tableNum,
                 total: totalPrice,
                 basket: JSON.stringify(basket),
+                priceInfo: JSON.stringify(priceInfo),
                 customerToken: currentToken
             };
-            postSend(data);
+            console.log(typeof(totalPrice));
+            IMP.request_pay({
+                pg : 'kakaopay', // version 1.1.0부터 지원.
+                pay_method : 'card',
+                merchant_uid : 'merchant_' + new Date().getTime(),
+                name : '주문명:결제테스트',
+                amount : totalPrice,
+                buyer_email : 'iamport@siot.do',
+                buyer_name : '구매자이름',
+                buyer_tel : '010-1234-5678',
+                buyer_addr : '서울특별시 강남구 삼성동',
+                buyer_postcode : '123-456',
+                m_redirect_url : '/customer/payment'
+            }, function(rsp) {
+                if ( rsp.success ) {
+                    // alert("changed!");
+                    postSend(data);
+                } else {
+                    alert("fail!!");
+                    var msg = '결제에 실패하였습니다.';
+                    msg += '에러내용 : ' + rsp.error_msg;
+                }
+                // alert(msg);
+            });
+
+            // postSend(data);
+
         })
     }).catch(function (error) {
         console.log("fail to get permission //info : ", error);
         //홈으로
     });
+}
+
+function payment(){
+
 }
 
 function postSend(data) {
@@ -212,13 +248,36 @@ function postSend(data) {
         , url: "/customer/order"
         , data: data
         , success: function (res) {
-            orderId = res.orderId;
-            // orderNum = res.orderNum;
-            location.href='receipt?rest='+restId+'&id='+orderId;
+            if(res==199){
+                alert("영업이 종료되었습니다. 사장님께 문의하세요.")
+            }else{
+                orderId = res;
+                location.href='receipt?id='+orderId+"&rest="+restId;
+            }
+
         }
         , error: function (data) {
             alert("error");
         }
     });
+}
+
+function post_to_url(path, params, method) {
+    method = method || "post"; // Set method to post by default, if not specified.
+
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+    for (var key in params) {
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", key);
+        hiddenField.setAttribute("value", params[key]);
+
+        form.appendChild(hiddenField);
+    }
+    // form.onsubmit = handleSubmit(event);
+    document.body.appendChild(form);
+    form.submit();
 }
 

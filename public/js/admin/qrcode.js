@@ -49,7 +49,6 @@ $(document).ready(function () {
 
 function infoLoad() {
     restId = getParameterByName('id');
-    console.log("id",restId);
     db.collection("restaurants").doc(restId).get().then(function (doc) {
         table = doc.data().table;
         takeout = doc.data().takeout;

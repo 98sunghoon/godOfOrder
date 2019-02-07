@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>주문의 신_주문을 편리하게</title>
     <meta name="Customer" content="customer 1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Gothic+A1:400,500,600&amp;subset=korean" rel="stylesheet">
     <style>
         body {
@@ -46,15 +47,16 @@
 
 <body>
 <!--맨 윗줄-->
-<div id="top"> <img src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height: 100%;"></div>
+<div id="top"><img src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height: 100%;"></div>
 <!-- 내용 -->
 <div id="contents">
     <div class="alert">
         <p style="font-size: 60px;">주문이 완료되었습니다!</p>
         <p style="font-size: 40px;"> 주문하신 음식을 조리 중 입니다.
-            <br> 잠시만 기다려 주세요... </p><p style="text-align: left"> 주문내역 </p>
+            <br> 잠시만 기다려 주세요... </p>
+        <p style="text-align: left"> 주문내역 </p>
         <hr style="border: 1px solid">
-        <table class="table">
+        <table class="table" id="receiptTable">
             <thead>
             <colgroup>
                 <col style="width: 40%">
@@ -68,30 +70,35 @@
             </tr>
             </thead>
             <tbody>
+            <%
+            for(var i in basket){
+            %>
             <tr>
-                <td>라면</td>
-                <td>1</td>
-                <td id="price">4000원</td>
+                <td><%= i %></td>
+                <td><%= basket[i] %></td>
+                <td id="price"><%= priceInfo[i]*basket[i] %>원</td>
             </tr>
-            <tr>
-                <td>이성훈</td>
-                <td>3</td>
-                <td id="price">600원</td>
-            </tr>
-            <tr>
-                <td>이유석</td>
-                <td>8</td>
-                <td id="price">8000원</td>
-            </tr>
-            <tr>
-                <td colspan="2">총 가격</td>
-
-                <td id="price">12600원</td>
-            </tr>
+            <%
+            }
+            %>
             </tbody>
         </table>
     </div>
 </div>
+<script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+<script type="text/javascript">
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyAWhKVEGr3o6rM4QQLTxgvArv_LCanc1EU",
+        authDomain: "godoforder-74975.firebaseapp.com",
+        databaseURL: "https://godoforder-74975.firebaseio.com",
+        projectId: "godoforder-74975",
+        storageBucket: "godoforder-74975.appspot.com",
+        messagingSenderId: "583480301154"
+    };
+    firebase.initializeApp(config);
+</script>
+<script src="/js/customer/receipt.js"></script>
 </body>
 
 </html>

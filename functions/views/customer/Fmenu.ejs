@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>주문의 신_주문을 편리하게</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>주문의 신_주문을 편리하게</title>
+    <meta name="Manager" content="manager 2">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Gothic+A1:400,500,600&amp;subset=korean" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json"/>
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            font-size: 50px;
+            font-family: 'Gothic A1', sans-serif;
+            font-weight: 500;
+            text-align: center;
+            background-color: #F8F4EE;
+        }
+
+        #top {
+            background-color: #F8F4EE;
+            width: 100%;
+            height: 170px;
+            left: 0;
+            top: 0;
+            text-align: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        #bottom {
+            padding-top: 10px;
+        }
+
+        input {
+            height: 300px;
+            margin: 10px;
+            font-size: 100px !important;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            padding: 0;
+            margin: 0;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<!--누르면 올라오고 내려옴-->
+
+<script>
+    $(document).ready(function () {
+        $("#flip").click(function () {
+            $("#panel").slideToggle("slow");
+        });
+    });
+</script>
+<!--맨 윗줄-->
+<div id="top"><img src="/images/Logo.jpg" alt="로고" title="주문의 신" style="height: 100%;"></div>
+<!--가운데 내용-->
+<div id="bottom">
+    <table>
+        <% for(var i in data){ %>
+            <tr>
+                <input type="button" value=<%- data[i]%> style="width:98%" class="btn btn-outline-dark"
+                       onclick=redirectTo("<%- i%>")>
+            </tr>
+        <% } %>
+    </table>
+</div>
+
+
+<script type="text/javascript" src="/js/customer/Fmenu.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+</body>
+
+</html>

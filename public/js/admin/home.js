@@ -37,6 +37,7 @@ function restaurantList() {
 
     rests.get().then(function (querySnapshot) {
         querySnapshot.forEach(function (ref) {
+            console.log(ref);
             ref.data().restaurant.get().then(function (doc) {
                 if (doc.exists) {
                     let object = {
@@ -44,7 +45,7 @@ function restaurantList() {
                         table: doc.data().table,
                         takeout: doc.data().takeout ? "o" : "x",
                         serving: doc.data().serving ? "o" : "x"
-                    }
+                    };
                     tableData.push(object);//데이터 저장해놓기
                     var tr = document.createElement("tr");
                     tr.setAttribute("id", doc.id);
@@ -70,7 +71,7 @@ function restaurantList() {
                     QRButton.setAttribute("id", "qrBtn");
                     QRButton.setAttribute("class", "btn btn-outline-dark");
                     QRButton.addEventListener('click', function () {
-                        window.open('/qr?id=' + doc.id)
+                        window.open("/qr?id="+doc.id,"","width=1000, height=800, resizable=no, scrollbars=no, status=no;");
                     });
                     QRButton.innerHTML = "조회";
                     tdQrcode.appendChild(QRButton);
@@ -125,7 +126,8 @@ function restaurantManage(restId) {
         newRest.set({
             manager: manager,
             sales:{"19000001":0},
-            revenue:{"19000001":0}
+            revenue:{"19000001":0},
+            foodcourt:0
         }).then(function () {
             console.log(newRest);
             var queryString = 'manage?id=' + newRest.id;

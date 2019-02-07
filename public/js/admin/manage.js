@@ -52,7 +52,7 @@ function restSave() {
     var takeout = $("input[name=input_takeout]").prop("checked");
     var serving = $("input[name=input_serving]").prop("checked");
 
-    // var manager = db.collection("managers").doc(uid);
+
     if (restId != "") {//점포 수정
         console.log(restId);
         var setWithMerge = restaurants.doc(restId).set({
@@ -257,7 +257,7 @@ function addMenu(obj) {
     tag += "</td>\n";
 
     tag += "<td>\n";
-    tag += "<input type=\"button\" class=\"btn btn-outline-dark\" style=\"height:10%\" onclick=delMenu(\"" + obj.id + "\") />\n";
+    tag += "<input type=\"button\" class=\"btn btn-outline-dark\" style=\"height:min-content;\" onclick=delMenu(\"" + obj.id + "\") />\n";
     tag += "</td>\n";
 
     tag += "</tr>\n";
@@ -360,6 +360,12 @@ function init() {
 
     console.log(restId);
     restRead();
+}
+
+function foodcourt(){
+    var popUrl = "/manage/foodcourt?id="+restId;
+    var popOption = "width=400, height=500, resizable=no, scrollbars=no, status=no;";
+    window.open(popUrl,"",popOption);
 }
 
 window.onload = function () {
